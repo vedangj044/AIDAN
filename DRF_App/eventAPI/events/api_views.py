@@ -1,12 +1,15 @@
 from rest_framework import viewsets
 from .models import eventdetails
 from . import serializers
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 
 class EventViewsets(viewsets.ModelViewSet):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.EventSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         user = self.request.user.id
