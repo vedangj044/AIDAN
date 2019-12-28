@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from . import models
+from .models import eventdetails
 from . import serializers
 from rest_framework.permissions import IsAuthenticated
 
@@ -10,6 +10,9 @@ class EventViewsets(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user.id
-        queryset = models.eventdetails.objects.filter(user=user)
+        queryset = eventdetails.objects.filter(user=user)
 
+        place = self.request.query_params.get('place', None)
+        if place is not None:
+            queryset = eventdetails.objects.filter(user=user,place=place)
         return queryset

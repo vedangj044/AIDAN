@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'rest_framework',
     'rest_registration',
+    'django_filters',
 ]
 
 REST_REGISTRATION = {
