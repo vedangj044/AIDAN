@@ -19,5 +19,6 @@ from .api import router
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url('api/v1/', include(router.urls))
+    url('api/v1/', include(router.urls)),
+    url('accounts/', include('rest_registration.api.urls')),
 ]
