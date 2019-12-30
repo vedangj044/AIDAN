@@ -20,19 +20,21 @@ from contacts import views
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    re_path(
+        r'^login/$',
+        auth_views.LoginView.as_view(
+            template_name='login.html'),
+        name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    path('signup/',users_views.SignUpView,name='signup'),
-    re_path(r'^login/home/$',views.ContactView,name='home'),
-    path('NewContact/',views.create_Contact,name='create'),
+    path('signup/', users_views.SignUpView, name='signup'),
+    re_path(r'^login/home/$', views.ContactView, name='home'),
+    path('NewContact/', views.create_Contact, name='create'),
     # re_path(r'^home/(?P<pk>\d+)/$',views.PersonView,name='person'),
-    re_path(r'^login/home/(?P<pk>\d+)/edit/$',views.contact_edit,name='edit'),
-    path('',TemplateView.as_view(template_name='base.html'),name='base'),
-    re_path(r'^login/home/(?P<pk>\d+)/confirm_delete/$',views.contact_delete,name='delete'),
-
+    re_path(r'^login/home/(?P<pk>\d+)/edit/$',
+            views.contact_edit, name='edit'),
+    path('', TemplateView.as_view(template_name='base.html'), name='base'),
+    re_path(r'^login/home/(?P<pk>\d+)/confirm_delete/$',
+            views.contact_delete, name='delete'),
 ]

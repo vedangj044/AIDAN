@@ -16,11 +16,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mycontact',
             name='photo',
-            field=models.ImageField(blank=True, upload_to='myproject/DjangoApp/static/img/'),
+            field=models.ImageField(
+                blank=True,
+                upload_to='myproject/DjangoApp/static/img/'),
         ),
         migrations.AddField(
             model_name='mycontact',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='mycontacts', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='mycontacts',
+                to=settings.AUTH_USER_MODEL),
         ),
     ]

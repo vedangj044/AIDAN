@@ -15,9 +15,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MyContact',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80)),
-                ('phone', phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None, unique=True)),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
+                ('name',
+                 models.CharField(
+                     max_length=80)),
+                ('phone',
+                 phonenumber_field.modelfields.PhoneNumberField(
+                     max_length=128,
+                     region=None,
+                     unique=True)),
             ],
         ),
     ]
