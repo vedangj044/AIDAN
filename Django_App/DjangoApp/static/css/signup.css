@@ -1,0 +1,89 @@
+.container {
+    padding: 16px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    padding-top: 30px;
+    align-items:  center;
+     padding-left: 30px;
+    padding-right: 30px; 
+   
+  }
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    font-size: 1rem;
+  }
+
+form {
+    background-color:white;
+    opacity: initial;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    width: 40%;
+    align-self: center;
+    padding-right: 60px;
+    padding-left:60px;
+    margin-left: 25%;
+    margin-top:0%;
+  }
+  
+  /* Full-width inputs */
+input[type=text], input[type=password],input[type=email] {
+    width: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .psw{
+      padding:16px;
+      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      text-align: center;
+      font-size: 1.5rem;
+      background-color:whitesmoke;
+  }
+  header{
+      font-size: 3rem;
+      font-family:'Varela Round', sans-serif;
+      padding-left:0.2%;
+      margin-top: 4px;
+      background-color:#12CBC4;
+      color:black;
+      padding-top:4%;
+      border-radius: 5px;
+      padding-bottom:3px;
+
+      
+  }
+
+ .psw a{
+     color:green;
+     text-decoration: none;
+ }
+
+
+ .SignUp{
+     text-align: center;
+     font-size: 2rem;
+     font-family: 'Work Sans', sans-serif;
+     color:black;
+     margin-bottom: 0%;
+     margin-top:3%;
+ }
+ body{
+     background-image: url(../img/email-pattern.png);
+ }
+ img{
+  
+    width:50px;
+    height:45px;
+ }
