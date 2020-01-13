@@ -1,3 +1,5 @@
 django
 django-rest-registration
 django-filter
+vega_datasets
+altair

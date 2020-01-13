@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_registration',
     'django_filters',
+    'corsheaders',
 ]
 
 REST_REGISTRATION = {
@@ -54,7 +55,12 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
