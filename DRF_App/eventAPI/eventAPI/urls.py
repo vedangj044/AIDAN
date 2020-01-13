@@ -16,11 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from .api import router
-from events.visual import VisualEndpoint
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('api/v1/', include(router.urls)),
     url('accounts/', include('rest_registration.api.urls')),
-    url('visual', VisualEndpoint.as_view(), name='visual')
+    url(r'^visual/', include('events.urls')),
 ]

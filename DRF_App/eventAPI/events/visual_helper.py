@@ -12,3 +12,8 @@ chart = alt.Chart(cars).mark_point().encode(
     y='Miles_per_Gallon',
     color='Origin',
 ).interactive()
+
+
+"""
+Create types of graph.
+"""

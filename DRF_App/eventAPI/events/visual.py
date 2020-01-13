@@ -10,3 +10,8 @@ class VisualEndpoint(APIView):
 
     def get(self, request):
         return Response(help.chart.to_dict())
+
+class passenger(VisualEndpoint):
+
+    def get(self, request):
+        return Response(help.chart.to_dict())
