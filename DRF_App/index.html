@@ -8,10 +8,12 @@
 <body>
   <div id="view"></div>
   <script>
-    vegaEmbed(
-      '#view',
-      'http://localhost:8080/visual'
-    );
+
+    fetch('http://localhost:8080/visual?format=json')
+      .then(res => res.json())
+      .then(spec => vegaEmbed('#view',spec))
+      .catch(err => console.error(err));
+
   </script>
 </body>
 </html>
