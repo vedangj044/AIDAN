@@ -1,0 +1,133 @@
+
+
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Contacts</title>
+   <link href="{% static 'css/home.css' %}" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css?family=Varela+Round|Work+Sans&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  
+</head>
+
+<body>
+   
+    <header>
+        <ul>
+            <li  class="list">
+              <a href="{% url 'logout'%}">Logout</a> 
+            </li >
+            <li class="name">
+              Hi {{user.username}} 
+            </li>
+        </ul>
+      <img src="https://image.flaticon.com/icons/png/512/74/74472.png"> CONTACTS
+     
+          
+    
+    </header>
+    {% if user.is_authenticated %}
+        <!-- <h1>Hi {{user.username}}</h1>
+        <h2><a href="{% url 'logout'%}">Logout</a></h2> -->
+        <table class="table">
+            <thead>
+              <tr>
+                
+                <th>Name</th>
+                <th>Phone</th>
+                <th></th>
+                
+              </tr>
+              <tbody>
+               
+              {%for contact in members %}
+              
+                <tr >
+                  <td>{{contact.name}}</td>
+                  <td>{{contact.phone}}</td>
+                  <td>  <a href="{% url 'edit' contact.pk %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete' contact.pk %}"class="btn btn-danger">Delete</a></td>
+                </tr>
+                {%endfor%}
+              </tbody>
+            </thead>
+        </table>
+        
+        <!-- {%for contact in members %}
+        <div class="list">
+            <li>
+               {{contact.name}}
+            </li>
+            <li>
+                {{contact.phone}}
+            </li>
+        
+            <a href="{% url 'edit' contact.pk %}">Edit</a>
+            <a href="{% url 'delete' contact.pk %}">Delete</a>
+        </div> 
+       
+       
+        {%endfor%}-->
+        <div class="create"><a href="{% url 'create'%}" class="btn btn-primary">New Contact</a></button></div>
+
+   
+    {% else %}
+          <h1>Invalid id</h1><br>
+          <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

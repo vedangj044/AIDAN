@@ -1,0 +1,34 @@
+
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css'%}">
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <title>WELCOME TO CONTACTS</title>
+</head>
+<body>
+
+        <div class="myheading">Welcome to Contacts</div>
+        <div>
+            <div class="row">
+                <div class="col-sm-6"> 
+                    <img src="../static/img/PhoneCalls.gif" >
+                </div>
+                <div class="col-sm-6 mybox">
+                       
+                      <div class="mylogin"><img src="https://image.flaticon.com/icons/png/512/30/30582.png"><br><a href="{%url 'login'%}">Login to continue</a>....</div>
+                </div>
+                
+            </div>
+        </div>
+       
+    
+   
+</body>
+</html>

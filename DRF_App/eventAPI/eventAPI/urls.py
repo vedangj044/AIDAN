@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('api/v1/', include(router.urls)),
     url('accounts/', include('rest_registration.api.urls')),
+    url(r'^visual/', include('events.urls')),
 ]

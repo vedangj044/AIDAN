@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . import models
 
-class EventSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.HyperlinkedModelSerializer):
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
