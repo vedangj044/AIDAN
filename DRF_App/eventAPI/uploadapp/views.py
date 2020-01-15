@@ -1,22 +1,25 @@
 from django.shortcuts import render
-
-# Create your views here.
-from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-
 from .serializers import FileSerializer
+from .models import File
+from django.core.files.base import ContentFile
 
 class FileUploadView(APIView):
-    parser_class = (FileUploadParser,)
 
     def post(self, request, *args, **kwargs):
 
-      file_serializer = FileSerializer(data=request.data)
+        query = request.data.dict()['name']
 
-      if file_serializer.is_valid():
-          file_serializer.save()
-          return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-      else:
-          return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = FileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            f = File.objects.filter(name=query)
+            if len(f)>0:
+                f[0].content = request.data.dict()['content']
+                f[0].save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
