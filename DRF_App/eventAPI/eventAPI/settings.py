@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     'rest_registration',
     'django_filters',
     'corsheaders',
+    'uploadapp',
 ]
+
+MEDIA_URL =  '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': False,

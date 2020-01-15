@@ -1,5 +1,6 @@
-django
+django==2.2.9
 django-rest-registration
 django-filter
 vega_datasets
 altair
+django-cors-headers
