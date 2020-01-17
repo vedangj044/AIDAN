@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -36,7 +36,9 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import '../../node_modules/react-grid-layout/css/styles.css';
 import '../../node_modules/react-resizable/css/styles.css';
 import CloseIcon from '@material-ui/icons/Close';
- 
+import vegaEmbed from 'vega-embed';
+
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 var datajson = {
@@ -180,11 +182,16 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  var layouts = [
+  const [layouts, setLayouts] = useState([
     {i: 'a', x: 0, y: 0, w: 6, h: 2, static: true},
     {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
     {i: 'c', x: 4, y: 0, w: 6, h: 2}
-  ];
+  ]);
+
+  const onLayoutChange = layout => {
+    setLayouts(layout);
+    console.log(layout);
+  }
 
   const [todos, setTodos] = useState(datajson.todos);
   const [closedTasks, setClosedTasks] = useState(datajson.closedTasks);
@@ -219,6 +226,20 @@ export default function Dashboard() {
     // });
 
   }
+
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      draggedTasks.map(task =>
+        fetch(task.endpoint)
+        .then(res => res.json())
+        .then(spec => vegaEmbed('#'+task.taskID,spec))
+        .catch(err => console.error(err))
+      );
+      // console.log("hello")
+    }, 1000);
+    
+  }, []);
 
   function MainListItems() {
     return(
@@ -333,13 +354,13 @@ export default function Dashboard() {
         onDrop={event => onDrop(event)}
         onDragOver={(event => onDragOver(event))}
       >
-      <ResponsiveGridLayout className="layout" layouts={layouts}
+      <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
+        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} >
           {
           draggedTasks.map(task =>
           <Paper key={task.taskID}>
-            {task.task}
+            <div id={task.taskID}>{task.task}{task.taskID}</div>
             <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
           <CloseIcon />
         </IconButton></Paper>
