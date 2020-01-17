@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,6 +29,8 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
 // import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
@@ -36,9 +38,26 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import '../../node_modules/react-grid-layout/css/styles.css';
 import '../../node_modules/react-resizable/css/styles.css';
 import CloseIcon from '@material-ui/icons/Close';
- 
-const ResponsiveGridLayout = WidthProvider(Responsive);
+import vegaEmbed from 'vega-embed';
+import Axios from 'axios';
 
+const makeid = (length) => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+var uid = makeid(6);
+console.log(uid)
+
+var layout1 = {};
+var dashname1 = '';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
   todos: [
     {
@@ -59,8 +78,8 @@ var datajson = {
     task: 'Sample Endpoint 4'
   }],
   draggedTasks: [{
-    taskID : 'e',
-    task : "Sample Endpoint 5"
+    taskID: 'e',
+    task: "Sample Endpoint 5"
   }]
 }
 
@@ -68,7 +87,7 @@ var datajson = {
 
 
 function Copyright() {
- 
+
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
@@ -169,7 +188,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Dashboard() {
-
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -180,37 +198,50 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  var layouts = [
-    {i: 'a', x: 0, y: 0, w: 6, h: 2, static: true},
-    {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-    {i: 'c', x: 4, y: 0, w: 6, h: 2}
-  ];
+  const [dashname, setDashname] = useState(uid);
+
+
+  const [layouts, setLayouts] = useState([
+    // {i: 'a', x: 0, y: 0, w: 6, h: 2, static: true},
+    // {i: 'b', x: 10, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
+    // {i: 'c', x: 4, y: 0, w: 6, h: 2}
+  ]);
+
+
+
+
+
+  const onLayoutChange = layout => {
+    setLayouts(layout);
+    layout1 = layout;
+    savedatabase();
+  }
 
   const [todos, setTodos] = useState(datajson.todos);
   const [closedTasks, setClosedTasks] = useState(datajson.closedTasks);
   const [draggedTasks, setDraggedTasks] = useState(datajson.draggedTasks);
- 
+
 
   const onDrag = (event, todo) => {
     setDraggedTasks([
       ...draggedTasks,
-      todo  
+      todo
     ]);
-   }
+  }
 
-   const onClose = (event, todo) => {
+  const onClose = (event, todo) => {
     setClosedTasks([
       ...closedTasks,
-      todo  
+      todo
     ]);
     var index = draggedTasks.findIndex(i => i.taskID == todo.taskID);
-    draggedTasks.splice(index,1);
-   }
+    draggedTasks.splice(index, 1);
+  }
 
   const onDragOver = () => {
-    
+
   }
-  const onDrop = (event ) => {
+  const onDrop = (event) => {
     // const { completedTasks, draggedTask, todos } = this.state;
     // this.setState({
     //   completedTasks: [...completedTasks, draggedTask],
@@ -220,10 +251,69 @@ export default function Dashboard() {
 
   }
 
+  const arr = {
+    "a": "http://192.168.1.21:8080/visual/passenger/",
+    "b": "http://192.168.1.21:8080/visual/passenger/",
+    "c": "http://192.168.1.21:8080/visual/passenger/",
+    "d": "http://192.168.1.21:8080/visual/passenger/",
+    "e": "http://192.168.1.21:8080/visual/passenger/"
+  }
+
+  var height, useHeight = useState(0)
+
+  function search(arr, id, p) {
+    for (var j = 0; j < arr.length; j = j + 1) {
+      if (arr[j].i === id) {
+        if (p == 'h') {
+          return arr[j].h * 150;
+        }
+        return arr[j].w * 150;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      draggedTasks.map(task =>
+        fetch(arr[task.taskID])
+          .then(res => res.json())
+          .then(spec => vegaEmbed('#' + task.taskID, spec, { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
+          .catch(err => console.error(err))
+      );
+      // console.log("hello")
+    }, 10000);
+
+
+  }, []);
+
+  const savedatabase = () => {
+    console.log("hello")
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var formdata = new FormData();
+    formdata.append("name", '123');
+    formdata.append("content", '456');
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    Axios("http://192.168.1.21:8080/upload/", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('ERROR'));
+
+  }
+
+
   function MainListItems() {
-    return(
-    <div draggable={false}>
-      {/* <ListItem button draggable={true}>
+    return (
+      <div draggable={false}>
+        {/* <ListItem button draggable={true}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
@@ -235,20 +325,20 @@ export default function Dashboard() {
         </ListItemIcon>
         <ListItemText primary="Orders" />
       </ListItem> */}
-      {
-              todos.map(todo =>
-                <ListItem button
-                key={todo.taskID}
-                draggable={true}
-                onDrag={(event) => onDrag(event, todo)}>
-        <ListItemIcon>
-        <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary={todo.task} />
-      </ListItem>
-              )
-            }
-      {/* <ListItem button>
+        {
+          todos.map(todo =>
+            <ListItem button
+              key={todo.taskID}
+              draggable={true}
+              onDrag={(event) => onDrag(event, todo)}>
+              <ListItemIcon>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary={todo.task} />
+            </ListItem>
+          )
+        }
+        {/* <ListItem button>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
@@ -266,25 +356,26 @@ export default function Dashboard() {
         </ListItemIcon>
         <ListItemText primary="Integrations" />
       </ListItem> */}
-    </div>);
+      </div>);
   };
-  
+
   function SecondaryListItems() {
     return (<div>
       <ListSubheader inset>Recent Activities</ListSubheader>
       {closedTasks.map(todo =>
-              <ListItem button
-              key={todo.taskID}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary={todo.task} />
-            </ListItem>
-            )}
-      
+        <ListItem button
+          key={todo.taskID}>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary={todo.task} />
+        </ListItem>
+      )}
+
     </div>);
   };
-  
+
+
 
   return (
     <div className={classes.root}>
@@ -303,11 +394,13 @@ export default function Dashboard() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             AIDAN Dashboard
           </Typography>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
+          <Button color="inherit" variant="outline">Admin</Button>
+          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -318,37 +411,39 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
+          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
-        <List><MainListItems/></List>
+        <List><MainListItems /></List>
         <Divider />
-        <List><SecondaryListItems/></List>
+        <List><SecondaryListItems /></List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}
-        onDrop={event => onDrop(event)}
-        onDragOver={(event => onDragOver(event))}
-      >
-      <ResponsiveGridLayout className="layout" layouts={layouts}
-        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
-          {
-          draggedTasks.map(task =>
-          <Paper key={task.taskID}>
-            {task.task}
-            <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
-          <CloseIcon />
-        </IconButton></Paper>
-          )
-          } 
-      </ResponsiveGridLayout>
+          onDrop={event => onDrop(event)}
+          onDragOver={(event => onDragOver(event))}
+        >
+          <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
+          // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+          // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} 
+          >
+            {
+              draggedTasks.map(task =>
+                <Paper key={task.taskID} style={{ display: "table" }}>
+                  <div id={task.taskID} style={{ display: "table-row" }}>{task.task}{task.taskID}</div>
+                  <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
+                    <CloseIcon />
+                  </IconButton></Paper>
+
+              )
+            }
+          </ResponsiveGridLayout>
         </Container>
       </main>
     </div>
   );
-
 }
