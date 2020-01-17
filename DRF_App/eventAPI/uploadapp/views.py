@@ -17,7 +17,7 @@ class FileUploadView(APIView):
 
         query = request.data.dict()['name']
 
-        serializer = FileSerializer(data=request.data)
+        serializer = FileSerializer(data=request.data, context={'request': request})
         if request.user.is_superuser:
             if serializer.is_valid():
                 serializer.save()
