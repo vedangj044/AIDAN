@@ -9,9 +9,13 @@
   <div id="view"></div>
   <script>
 
-    fetch('http://localhost:8080/visual?format=json')
+    var opt = {
+      width: 1000,
+      height: 500,
+    }
+    fetch('http://192.168.1.21:8080/visual/passenger/')
       .then(res => res.json())
-      .then(spec => vegaEmbed('#view',spec))
+      .then(spec => vegaEmbed('#view',spec, opt))
       .catch(err => console.error(err));
 
   </script>
