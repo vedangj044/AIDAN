@@ -1,8 +1,8 @@
-![ERD_1](/Flowcharts/Screenshot(177).png)
+![ERD_1](/Flowcharts/screenshot.png)
 
 ![ERD_2](/Flowcharts/sih.png)
 
-![Dashboard](/Flowcharts/Screenshot(180).png)
+![Dashboard](/Flowcharts/screenshot2.png)
 
-![Dashboard](/Flowcharts/Screenshot(181).png)
+![Dashboard](/Flowcharts/screenshot1.png)
 
