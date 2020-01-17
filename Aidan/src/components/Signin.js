@@ -134,6 +134,7 @@ function Copyright() {
             variant="contained"
             color="primary"
             style={{marginTop:"30px", marginBottom:"30px"}}
+            onClick={this.submit}
           >
             Sign In
           </Button>
