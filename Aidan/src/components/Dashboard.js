@@ -252,11 +252,11 @@ export default function Dashboard() {
   }
 
   const arr = {
-    "a": "http://192.168.1.21:8080/visual/passenger/",
-    "b": "http://192.168.1.21:8080/visual/passenger/",
-    "c": "http://192.168.1.21:8080/visual/passenger/",
-    "d": "http://192.168.1.21:8080/visual/passenger/",
-    "e": "http://192.168.1.21:8080/visual/passenger/"
+    "a": "http://192.168.43.235:8080/visual/passenger/",
+    "b": "http://192.168.43.235:8080/visual/passenger/",
+    "c": "http://192.168.43.235:8080/visual/passenger/",
+    "d": "http://192.168.43.235:8080/visual/passenger/",
+    "e": "http://192.168.43.235:8080/visual/passenger/"
   }
 
   var height, useHeight = useState(0)
@@ -302,7 +302,7 @@ export default function Dashboard() {
       redirect: 'follow'
     };
 
-    Axios("http://192.168.1.21:8080/upload/", requestOptions)
+    Axios("http://192.168.43.235:8080/upload/", requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('ERROR'));
@@ -399,8 +399,9 @@ export default function Dashboard() {
               <NotificationsIcon />
             </Badge>
           </IconButton> */}
-          <Button color="inherit" variant="outline">Admin</Button>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href="/admin">Admin</Button>
+          <Button color="inherit" href="/signin">Login</Button>
+          
         </Toolbar>
       </AppBar>
       <Drawer
