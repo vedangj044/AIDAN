@@ -8,11 +8,11 @@
 
 ### Use Case           and UI Dashboard
 
-<img src="/Flowcharts/screenshot3.png" width="350" height="350"/>      <img src="/Flowcharts/Dashboard.png" width="350" height="350"/>
+<img src="/Flowcharts/screenshot3.png" width="450" height="350"/>      <img src="/Flowcharts/Dashboard.png" width="500" height="350"/>
 
 
 ### Login  and            Register
-<img src="/Flowcharts/Login.png" width="350" height="350"/>             <img src="/Flowcharts/Register.png" width="350" height="350"/>             
+<img src="/Flowcharts/Login.png" width="450" height="350"/>             <img src="/Flowcharts/Register.png" width="450" height="350"/>             
 
 
 
