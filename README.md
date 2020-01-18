@@ -4,7 +4,7 @@
 ### Backend REST API
 ![ERD_1](/Flowcharts/screenshot.png)
 
-### 
+### Frontend React App
 ![ERD_2](/Flowcharts/ERD.png)
 
 ### Use Case
