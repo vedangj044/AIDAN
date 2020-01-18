@@ -1,16 +1,16 @@
 # AIDAN
 
 
-### Backend REST API    <p>                       </p>Frontend React App
+### Backend REST API       Frontend React App
 <img src="/Flowcharts/screenshot.png" width="350" height="350"/>      <img src="/Flowcharts/ERD.png" width="350" height="350"/>    
 
 
-### Use Case            <p>                       </p>UI Dashboard
+### Use Case            UI Dashboard
 
 <img src="/Flowcharts/screenshot3.png" width="350" height="350"/>      <img src="/Flowcharts/Dashboard.png" width="350" height="350"/>
 
 
-### login              <p>                       </p>Register
+### login              Register
 <img src="/Flowcharts/Login.png" width="350" height="350"/>             <img src="/Flowcharts/Register.png" width="350" height="350"/>             
 
 
