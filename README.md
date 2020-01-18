@@ -3,7 +3,7 @@
 
 ### Backend REST API and Frontend React App
 
-<img src="/Flowcharts/screenshot.png" width="450" height="300"/>      <img src="/Flowcharts/ERD.png" width="500" height="300"/>    
+<img src="/Flowcharts/screenshot.png" width="350" height="200"/>      <img src="/Flowcharts/ERD.png" width="500" height="300"/>    
 
 
 ### Use Case            UI Dashboard
