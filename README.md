@@ -6,3 +6,4 @@
 
 ![Dashboard](/Flowcharts/screenshot1.png)
 
+![Use Diagram](/Flowcharts/screenshot3.png)
