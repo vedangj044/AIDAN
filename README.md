@@ -2,27 +2,27 @@
 
 
 ### Backend REST API
-<img src="/Flowcharts/screenshot.png" width="100" height="100"/>
+<img src="/Flowcharts/screenshot.png" width="250" height="250"/>
 
 ### Frontend React App
-![ERD_2](/Flowcharts/ERD.png)
+<img src="/Flowcharts/ERD.png" width="250" height="250"/>
 
 ### Use Case
 
-![Use Diagram](/Flowcharts/screenshot3.png)
+<img src="/Flowcharts/screenshot3.png" width="250" height="250"/>
 
 ## UI
 ### Dashboard
-![Dashboard](/Flowcharts/Dashboard.png)
+<img src="/Flowcharts/Dashboard.png" width="250" height="250"/>
 
 ### login
-![Login](/Flowcharts/Login.png)
+<img src="/Flowcharts/Login.png" width="250" height="250"/>
 
 ### Register
-![Register](/Flowcharts/Register.png)
+<img src="/Flowcharts/Register.png" width="250" height="250"/>
 
-![picture1](/Flowcharts/DB.png)
+<img src="/Flowcharts/DB.png" width="250" height="250"/>
 
-![picture2](/Flowcharts/CDA.png)
+<img src="/Flowcharts/CDA.png" width="250" height="250"/>
 
-![picture3](/Flowcharts/CDB.png)
+<img src="/Flowcharts/CDB.png" width="250" height="250"/>
