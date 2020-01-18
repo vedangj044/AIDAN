@@ -1,6 +1,7 @@
 # AIDAN
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ### Backend REST API
 ![ERD_1](/Flowcharts/screenshot.png)
 
@@ -10,6 +11,8 @@
 ### Use Case
 =======
 >>>>>>> 69dbfb6dc8142ad29cf1b0191120df0cd6323804
+=======
+>>>>>>> dc14d9bb009cfcf14397561f70a3d5bf0f5f6ff8
 ![Use Diagram](/Flowcharts/screenshot3.png)
 
 ## UI
