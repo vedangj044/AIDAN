@@ -1,7 +1,7 @@
 # AIDAN
 
 
-### Backend REST API       Frontend React App
+### Backend REST API                               Frontend React App
 <img src="/Flowcharts/screenshot.png" width="350" height="350"/>      <img src="/Flowcharts/ERD.png" width="350" height="350"/>    
 
 
