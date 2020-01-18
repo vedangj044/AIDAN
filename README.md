@@ -1,11 +1,9 @@
 # AIDAN
 
 
-### Backend REST API
-<img src="/Flowcharts/screenshot.png" width="250" height="250"/>
+### Backend REST API                                                   ### Frontend React App
+<img src="/Flowcharts/ERD.png" width="250" height="250"/>              <img src="/Flowcharts/screenshot.png" width="250" height="250"/>       
 
-### Frontend React App
-<img src="/Flowcharts/ERD.png" width="250" height="250"/>
 
 ### Use Case
 
