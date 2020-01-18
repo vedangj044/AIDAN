@@ -57,6 +57,8 @@ console.log(uid)
 var layout1 = {};
 var dashname1 = '';
 
+var port = "http://192.168.43.8:8080";
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
   todos: [
@@ -252,11 +254,11 @@ export default function Dashboard() {
   }
 
   const arr = {
-    "a": "http://192.168.1.21:8080/visual/passenger/",
-    "b": "http://192.168.1.21:8080/visual/passenger/",
-    "c": "http://192.168.1.21:8080/visual/passenger/",
-    "d": "http://192.168.1.21:8080/visual/passenger/",
-    "e": "http://192.168.1.21:8080/visual/passenger/"
+    "a": `${port}` + `/visual/passenger/`,
+    "b": `${port}` + `/visual/passenger/`,
+    "c": `${port}` + `/visual/passenger/`,
+    "d": `${port}` + `/visual/passenger/`,
+    "e": `${port}` + `/visual/passenger/`
   }
 
   var height, useHeight = useState(0)
@@ -287,25 +289,21 @@ export default function Dashboard() {
   }, []);
 
   const savedatabase = () => {
-    console.log("hello")
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    var formdata = new FormData();
-    formdata.append("name", '123');
-    formdata.append("content", '456');
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      body: formdata,
-      redirect: 'follow'
-    };
-
-    Axios("http://192.168.1.21:8080/upload/", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('ERROR'));
+    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
+    fetch('http://192.168.43.8:8080/upload/', {
+          method: 'POST', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
 
   }
 
@@ -399,8 +397,9 @@ export default function Dashboard() {
               <NotificationsIcon />
             </Badge>
           </IconButton> */}
-          <Button color="inherit" variant="outline">Admin</Button>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href="/admin">Admin</Button>
+          <Button color="inherit" href="/signin">Login</Button>
+          
         </Toolbar>
       </AppBar>
       <Drawer
