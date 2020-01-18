@@ -2,7 +2,9 @@
 
 ![ERD_2](/Flowcharts/sih.png)
 
-![Dashboard](/Flowcharts/screenshot2.png)
+![Dashboard](/Flowcharts/Dashboard.png)
 
-![Dashboard](/Flowcharts/screenshot1.png)
+![Dashboard](/Flowcharts/Signin.png)
+
+![Dashboard](/Flowcharts/Register.png)
 
