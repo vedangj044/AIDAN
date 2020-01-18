@@ -4,7 +4,7 @@
 
 ![Dashboard](/Flowcharts/Dashboard.png)
 
-![Dashboard](/Flowcharts/Signin.png)
+![Dashboard](/Flowcharts/Login.png)
 
 ![Dashboard](/Flowcharts/Register.png)
 
