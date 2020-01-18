@@ -289,7 +289,7 @@ export default function Dashboard() {
   }, []);
 
   const savedatabase = () => {
-    var data = {name: dashname1, content: JSON.stringify(layout1)}
+    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
     fetch('http://192.168.43.8:8080/upload/', {
           method: 'POST', // or 'PUT'
           headers: {
