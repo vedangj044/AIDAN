@@ -2,7 +2,7 @@
 
 
 ### Backend REST API
-![ERD_1](/Flowcharts/screenshot.png=200x200)
+![ERD_1](/Flowcharts/screenshot.png|width=300)
 
 ### Frontend React App
 ![ERD_2](/Flowcharts/ERD.png)
