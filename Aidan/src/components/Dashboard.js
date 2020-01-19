@@ -55,7 +55,9 @@ var uid = makeid(6);
 console.log(uid)
 
 var layout1 = {};
-var dashname1 = '';
+var dashname1 = uid;
+
+var port = "http://192.168.43.48:8080";
 
 var port = "http://192.168.43.8:8080";
 
@@ -264,7 +266,7 @@ export default function Dashboard() {
   var height, useHeight = useState(0)
 
   function search(arr, id, p) {
-    for (var j = 0; j < arr.length; j = j + 1) {
+    for (var j = arr.length-1; j > 0; j = j - 1) {
       if (arr[j].i === id) {
         if (p == 'h') {
           return arr[j].h * 150;
@@ -274,28 +276,46 @@ export default function Dashboard() {
     }
   }
 
+  for(var j=0; j<layout1.length; j=j+1){
+    var k = layout1[j].i;
+  }
+
+  // function parse(spec, k) {
+  //   vegaEmbed.parse.spec(spec, function(error, chart) { chart({el:"#"+k}).update(); });
+  // }
+
   useEffect(() => {
     const timer = setInterval(() => {
-      draggedTasks.map(task =>
-        fetch(arr[task.taskID])
-          .then(res => res.json())
-          .then(spec => vegaEmbed('#' + task.taskID, spec, { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
-          .catch(err => console.error(err))
-      );
+      
+  for(var j=0; j<layout1.length; j=j+1){
+    var k = layout1[j].i;
+    var task = {taskID : k}
+    console.log(k)
+    // console.log(k)
+    fetch(arr[k])
+    .then(res => res.json())
+    // .then(spec => vegaEmbed('#' + k, spec, { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
+    // .then(spec => parse(spec, k))
+    .then(vegaEmbed('#'+k, arr[k], { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
+    .catch(err => console.error(err))
+  }
       // console.log("hello")
-    }, 10000);
+    }, 1000);
 
 
   }, []);
 
+
   const savedatabase = () => {
-    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
+
+    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}   
     fetch('http://192.168.43.8:8080/upload/', {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
+          credentials: "same-origin"
         })
         .then((response) => response.json())
         .then((data) => {
@@ -437,8 +457,8 @@ export default function Dashboard() {
                   <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
                     <CloseIcon />
                   </IconButton></Paper>
-
-              )
+                  )
+              
             }
           </ResponsiveGridLayout>
         </Container>

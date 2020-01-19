@@ -48,7 +48,7 @@ class Register extends React.Component {
     submit(event){
       const data = { username: this.state.username, first_name: this.state.firstName, last_name: this.state.lastName, email: this.state.email, password: this.state.password, password_confirm: this.state.rePassword };
   
-      fetch('http://192.168.43.8:8080/accounts/register/', {
+      fetch('http://192.168.43.48:8080/accounts/register/',{
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
@@ -86,8 +86,8 @@ class Register extends React.Component {
             <TextField id="password" margin="normal" label="Repeat password" type="password" variant="outlined" value={this.state.rePassword} onChange={this.updaterepass}/>
             <br/>
             <Button type="submit" color="primary" variant="outlined" onClick={this.submit}> Submit </Button>
-            <Fab color="primary" disabled={this.state.forward}>
-              <a href="/signin" ><ArrowForwardIosRoundedIcon /></a>
+            <Fab color="primary" disabled={this.state.forward} >
+              <a href="/signin" ><ArrowForwardIosRoundedIcon style={this.state.forward?{color:"primary"}:{color:"white"}}/></a>
             </Fab>
             <br/>
             <br/>
