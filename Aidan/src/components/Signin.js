@@ -27,10 +27,11 @@ class LoginForm extends React.Component {
   submit(event){
     const data = { login: this.state.login, password: this.state.password };
 
-    fetch('http://192.168.43.8:8080/accounts/login/', {
+    fetch('http://192.168.43.48:8080/accounts/login/', {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
+        'credentials': 'same-origin',
       },
       body: JSON.stringify(data),
     })
@@ -42,6 +43,8 @@ class LoginForm extends React.Component {
     .catch((error) => {
       console.error('Error:', error);
     });
+
+    fetch("http://192.168.43.48:8080/accounts/profile/").then(res=> res.json()).then(spec => console.log(spec));
   }
 
   render() {
@@ -58,10 +61,10 @@ class LoginForm extends React.Component {
           <br/>
           <Button type="submit" color="primary" variant="outlined" onClick={this.submit}> Submit </Button>
           <Fab color="primary" disabled={this.state.forward}>
-            <a href="index.html" ><ArrowForwardIosRoundedIcon /></a>
+            <a href="index.html" ><ArrowForwardIosRoundedIcon style={this.state.forward?{color:"primary"}:{color:"white"}}/></a>
           </Fab>
           <br/>
-          <a href="signup.html"><h4 color="primary"> Register </h4></a>
+          <a href="/admin"><h4 color="primary"> Register </h4></a>
           <br/>
         </Card>
       </div>
