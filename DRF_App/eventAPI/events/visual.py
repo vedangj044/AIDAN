@@ -8,10 +8,17 @@ class VisualEndpoint(APIView):
     def get_extra_actions(cls):
         return []
 
-    def get(self, request):
-        return Response(help.chart.to_dict())
-
 class passenger(VisualEndpoint):
 
     def get(self, request):
-        return Response(help.chart.to_dict())
+        return Response(help.chart1())
+
+class horizon(VisualEndpoint):
+
+    def get(self, request):
+        return Response(help.chart2().to_dict())
+
+class heatmap(VisualEndpoint):
+
+    def get(self, request):
+        return Response(help.chart3().to_dict())
