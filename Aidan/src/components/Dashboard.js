@@ -59,6 +59,8 @@ var dashname1 = uid;
 
 var port = "http://192.168.43.48:8080";
 
+var port = "http://192.168.43.8:8080";
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
   todos: [
@@ -255,9 +257,9 @@ export default function Dashboard() {
 
   const arr = {
     "a": `${port}` + `/visual/passenger/`,
-    "b": `${port}` + `/visual/horizon/`,
+    "b": `${port}` + `/visual/passenger/`,
     "c": `${port}` + `/visual/passenger/`,
-    "d": `${port}` + `/visual/horizon/`,
+    "d": `${port}` + `/visual/passenger/`,
     "e": `${port}` + `/visual/passenger/`
   }
 
@@ -305,6 +307,7 @@ export default function Dashboard() {
 
 
   const savedatabase = () => {
+
     var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}   
     fetch('http://192.168.43.8:8080/upload/', {
           method: 'POST', // or 'PUT'
