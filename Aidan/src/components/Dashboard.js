@@ -59,7 +59,7 @@ var dashname1 = uid;
 
 var port = "http://192.168.43.48:8080";
 
-var port = "http://192.168.43.8:8080";
+var port = "http://localhost:8080";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
@@ -257,8 +257,8 @@ export default function Dashboard() {
 
   const arr = {
     "a": `${port}` + `/visual/passenger/`,
-    "b": `${port}` + `/visual/passenger/`,
-    "c": `${port}` + `/visual/passenger/`,
+    "b": `${port}` + `/visual/horizon/`,
+    "c": `${port}` + `/visual/heatmap/`,
     "d": `${port}` + `/visual/passenger/`,
     "e": `${port}` + `/visual/passenger/`
   }
@@ -286,7 +286,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      
+
   for(var j=0; j<layout1.length; j=j+1){
     var k = layout1[j].i;
     var task = {taskID : k}
@@ -308,7 +308,7 @@ export default function Dashboard() {
 
   const savedatabase = () => {
 
-    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}   
+    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
     fetch('http://192.168.43.8:8080/upload/', {
           method: 'POST', // or 'PUT'
           headers: {
@@ -419,7 +419,7 @@ export default function Dashboard() {
           </IconButton> */}
           <Button color="inherit" href="/admin">Admin</Button>
           <Button color="inherit" href="/signin">Login</Button>
-          
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -448,7 +448,7 @@ export default function Dashboard() {
         >
           <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-          // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} 
+          // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
           >
             {
               draggedTasks.map(task =>
@@ -458,7 +458,7 @@ export default function Dashboard() {
                     <CloseIcon />
                   </IconButton></Paper>
                   )
-              
+
             }
           </ResponsiveGridLayout>
         </Container>
