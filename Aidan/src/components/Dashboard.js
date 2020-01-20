@@ -66,24 +66,24 @@ var datajson = {
   todos: [
     {
       taskID: 'a',
-      task: 'Sample Endpoint 1'
+      task: 'Boarding Gates'
     },
     {
       taskID: 'b',
-      task: 'Sample Endpoint 2'
+      task: 'Passenger Footfall'
     },
     {
       taskID: 'c',
-      task: 'Sample Endpoint 3'
+      task: 'Available Parking'
     }
   ],
   closedTasks: [{
     taskID: 'd',
-    task: 'Sample Endpoint 4'
+    task: 'Baggage Belts'
   }],
   draggedTasks: [{
     taskID: 'e',
-    task: "Sample Endpoint 5"
+    task: "Baggage Belts"
   }]
 }
 
@@ -256,7 +256,7 @@ export default function Dashboard() {
   }
 
   const arr = {
-    "a": `${port}` + `/visual/passenger/`,
+    "a": `${port}` + `/visual/pieChart/`,
     "b": `${port}` + `/visual/horizon/`,
     "c": `${port}` + `/visual/heatmap/`,
     "d": `${port}` + `/visual/passenger/`,

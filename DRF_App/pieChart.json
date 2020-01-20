@@ -1,0 +1,143 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "width": 300,
+  "height": 300,
+  "autosize": "pad",
+  "signals": [
+    {"name": "startAngle", "value": 0},
+    {"name": "endAngle", "value": 6.29},
+    {"name": "padAngle", "value": 0},
+    {"name": "sort", "value": true},
+    {"name": "strokeWidth", "value": 2},
+    {
+      "name": "selected",
+      "value": "",
+      "on": [{"events": "mouseover", "update": "datum"}]
+    }
+  ],
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {"continent": "GATE 1", "population": 1},
+        {"continent": "GATE 2", "population": 4},
+        {"continent": "GATE 3", "population": 7}
+      ],
+      "transform": [
+        {
+          "type": "pie",
+          "field": "population",
+          "startAngle": {"signal": "startAngle"},
+          "endAngle": {"signal": "endAngle"},
+          "sort": {"signal": "sort"}
+        }
+      ]
+    },
+    {
+      "name": "fieldSum",
+      "source": "table",
+      "transform": [
+        {
+          "type": "aggregate",
+          "fields": ["population"],
+          "ops": ["sum"],
+          "as": ["sum"]
+        }
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "title": "",
+      "orient": "none",
+      "padding": {"value": 10},
+      "encode": {
+        "symbols": {"enter": {"fillOpacity": {"value": 1}}},
+        "legend": {
+          "update": {
+            "x": {
+              "signal": "(width / 2) + if(selected && selected.continent == datum.continent, if(width >= height, height, width) / 2 * 1.1 * 0.8, if(width >= height, height, width) / 2 * 0.8)",
+              "offset": 20
+            },
+            "y": {"signal": "(height / 2)", "offset": -50}
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {"name": "color", "type": "ordinal", "range": {"scheme": "category20"}}
+  ],
+  "marks": [
+    {
+      "type": "arc",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "continent"},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"}
+        },
+        "update": {
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
+          "padAngle": {
+            "signal": "if(selected && selected.continent == datum.continent, 0.015, 0.015)"
+          },
+          "innerRadius": {
+            "signal": "if(selected && selected.continent == datum.continent, if(width >= height, height, width) / 2 * 0.45, if(width >= height, height, width) / 2 * 0.5)"
+          },
+          "outerRadius": {
+            "signal": "if(selected && selected.continent == datum.continent, if(width >= height, height, width) / 2 * 1.05 * 0.8, if(width >= height, height, width) / 2 * 0.8)"
+          },
+          "opacity": {
+            "signal": "if(selected && selected.continent !== datum.continent, 1, 1)"
+          },
+          "stroke": {"signal": "scale('color', datum.continent)"},
+          "strokeWidth": {"signal": "strokeWidth"},
+          "fillOpacity": {
+            "signal": "if(selected && selected.continent == datum.continent, 0.8, 0.8)"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {"fill": {"value": "#525252"}, "text": {"value": ""}},
+        "update": {
+          "opacity": {"value": 1},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "fontSize": {"signal": "if(width >= height, height, width) * 0.05"},
+          "text": {"value": "BOARDING GATES"}
+        }
+      }
+    },
+    {
+      "name": "mark_population",
+      "type": "text",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "text": {
+            "signal": "if(datum['endAngle'] - datum['startAngle'] < 0.3, '', format(datum['population'], '.2f'))"
+          },
+          "x": {"signal": "if(width >= height, height, width) / 2"},
+          "y": {"signal": "if(width >= height, height, width) / 2"},
+          "radius": {
+            "signal": "if(selected && selected.continent == datum.continent, if(width >= height, height, width) / 2 * 1.05 * 0.65, if(width >= height, height, width) / 2 * 0.65)"
+          },
+          "theta": {"signal": "(datum['startAngle'] + datum['endAngle'])/2"},
+          "fill": {"value": "#FFFFFF"},
+          "fontSize": {"value": 12},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"}
+        }
+      }
+    }
+  ]
+}

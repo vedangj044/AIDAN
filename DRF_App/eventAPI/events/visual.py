@@ -11,14 +11,19 @@ class VisualEndpoint(APIView):
 class passenger(VisualEndpoint):
 
     def get(self, request):
-        return Response(help.chart1())
+        return Response(help.baggage_belts().to_dict())
 
 class horizon(VisualEndpoint):
 
     def get(self, request):
-        return Response(help.chart2().to_dict())
+        return Response(help.passenger_footfall().to_dict())
 
 class heatmap(VisualEndpoint):
 
     def get(self, request):
-        return Response(help.chart3().to_dict())
+        return Response(help.available_parking().to_dict())
+
+class pieChart(VisualEndpoint):
+
+    def get(self, request):
+        return Response(help.boarding_gates())

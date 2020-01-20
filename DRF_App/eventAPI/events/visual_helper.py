@@ -3,123 +3,166 @@ Funtions to create views and visualize each endpoint.
 """
 
 import altair as alt
-from vega_datasets import data
 import pandas as pd
-import time as t
+import json
 
-cars = data.cars()
-
-source = pd.DataFrame([
-    {"Gates": 1,  "Passengers": 28},
-    {"Gates": 3,  "Passengers": 43},
-    {"Gates": 5,  "Passengers": 81},
-])
-
-c = 10
-
-def update():
-    global c
-    source.at[2, "Passengers"]=c
-    if c>=160:
-        return 0
-    c+=20
-
-def aleart():
-    global c
-    if c>=100:
-        return 5
-    return None;
-
-def color():
-    global c
-    if c>=150:
-        return 'red'
-    if c>=100:
-        return 'orange'
-    return None;
 """
 Create types of graph.
 """
-def chart1():
-    update()
-
-    chart = alt.Chart(source).mark_bar().encode(
-        x='Gates',
-        y='Passengers',
-        # The highlight will be set on the result of a conditional statement
-        color=alt.condition(
-            alt.datum.Gates == aleart(),  # If the year is 1810 this test returns True,
-            alt.value(color()),     # which sets the bar orange.
-            alt.value('steelblue')   # And if it's not true it sets the bar steelblue.
-        )
-    ).properties(width=300)
-
-
-    return chart.to_dict()
-
-def chart2():
-    source = pd.DataFrame([
-        {"x": 1,  "y": 28}, {"x": 2,  "y": 55},
-        {"x": 3,  "y": 43}, {"x": 4,  "y": 91},
-        {"x": 5,  "y": 81}, {"x": 6,  "y": 53},
-        {"x": 7,  "y": 19}, {"x": 8,  "y": 87},
-        {"x": 9,  "y": 52}, {"x": 10, "y": 48},
-        {"x": 11, "y": 24}, {"x": 12, "y": 49},
-        {"x": 13, "y": 87}, {"x": 14, "y": 66},
-        {"x": 15, "y": 17}, {"x": 16, "y": 27},
-        {"x": 17, "y": 68}, {"x": 18, "y": 16},
-        {"x": 19, "y": 49}, {"x": 20, "y": 15}
+def baggage_belts_data():
+    data = pd.DataFrame.from_records([
+          {"x": "Belt 1", "y": 1, },
+          {"x": "Belt 2", "y": 2, },
+          {"x": "Belt 3", "y": 4, }
     ])
 
-    area1 = alt.Chart(source).mark_area(
-        clip=True,
-        interpolate='monotone'
-    ).encode(
-        alt.X('x', scale=alt.Scale(zero=False, nice=False)),
-        alt.Y('y', scale=alt.Scale(domain=[0, 50]), title='y'),
-        opacity=alt.value(0.6)
-    ).properties(
-        width=500,
-        height=75
+    return data
+
+def baggage_belts():
+    data = baggage_belts_data()
+    bars = alt.Chart(data).mark_bar().encode(
+        alt.X('y:Q', title="No. Of Baggages"),
+        alt.Y('x:O', title="Belts"),
+
+        color = alt.condition(
+            alt.datum.y >= 4,
+            alt.value('orange'),
+            alt.value('steelblue'),
+        ),
     )
 
-    area2 = area1.encode(
-        alt.Y('ny:Q', scale=alt.Scale(domain=[0, 50]))
+    text = bars.mark_text(
+        align='center',
+        baseline='middle',
+        fontSize=20,
+        dx=10  # Nudges text to right so it doesn't appear on top of the bar
+    ).encode(
+        text='y:Q'
+    )
+
+    return (bars+text).configure_axis(
+        grid=False,
+        labelFontSize=18,
+        titleFontStyle='Courier', #This can be editted
+        titlePadding=13
+    ).configure_title(
+        fontSize=20,
+        font='Helvetica', #This can be editted
+        anchor='start',
+        color='gray'
+    ).properties(title="Arrival baggage belts",height=300)
+
+
+def passenger_footfall_data():
+    data = pd.DataFrame([
+        {'date': '2010-01-01T00:00:00', 'y': 20},
+        {'date': '2010-01-01T00:01:00', 'y': 27},
+        {'date': '2010-01-01T00:02:00', 'y': 20},
+        {'date': '2010-01-01T00:03:00', 'y': 40},
+        {'date': '2010-01-01T00:04:00', 'y': 60},
+        {'date': '2010-01-01T00:05:00', 'y': 70},
+    ])
+
+    return data
+
+def passenger_footfall():
+    data = passenger_footfall_data()
+
+    return alt.Chart(data).mark_area(
+        color="lightblue",
+        interpolate='step-after',
+        line=True
+    ).encode(
+        alt.X('date:T', title="Time"),
+        alt.Y('y', title="No. Of passengers(%)"),
+    ).configure_axis(
+        labelFontSize=18,
+        titlePadding=15,
+        titleFontStyle='Courier' #This can be editted
+    ).configure_title(
+        fontSize=20,
+        font='Calibri', #This can be editted
+        anchor='start',
+        color='gray'
+    ).properties(title="Passenger Footfall",height=300, width=600)
+
+def available_parking_data():
+    data = pd.DataFrame.from_records([
+          {"id": 1, "occupied": 1},
+          {"id": 2, "occupied": 0},
+          {"id": 3, "occupied": 0},
+          {"id": 4, "occupied": 0},
+          {"id": 5, "occupied": 0},
+          {"id": 6, "occupied": 0},
+          {"id": 7, "occupied": 0},
+          {"id": 8, "occupied": 1},
+          {"id": 9, "occupied": 0},
+          {"id": 10, "occupied": 1},
+          {"id": 11, "occupied": 0},
+
+    ])
+
+    return data
+
+def available_parking():
+    data = available_parking_data()
+    person = (
+        "m 0 0 l 14 -15 a 5 5 0 0 1 9 8 l -14 15 l 9 26 l -4 5 l -12 -22 l -12 12 l 1 5 l -2 3 l -12 -11 l 3 -2 l 5 0 l 9 -14 l -19 -11 l 4 -3 l 22 4"
+    )
+
+    bars = alt.Chart(data).transform_calculate(
+        row="ceil(datum.id/5)"
     ).transform_calculate(
-        "ny", alt.datum.y - 50
-    )
-
-    return area1 + area2
-
-def chart3():
-    source = data.cars()
-
-    # Configure common options
-    base = alt.Chart(source).transform_aggregate(
-        num_cars='count()',
-        groupby=['Origin', 'Cylinders']
+        col="datum.id - datum.row*5"
+    ).mark_point(
+        filled=True,
+        size=30,
     ).encode(
-        alt.X('Cylinders:O', scale=alt.Scale(paddingInner=0)),
-        alt.Y('Origin:O', scale=alt.Scale(paddingInner=0)),
+        x=alt.X("col:O", axis=None),
+        y=alt.Y("row:O", axis=None),
+        shape=alt.ShapeValue(person),
+        color = alt.condition(
+            alt.datum.occupied == 1,
+            alt.value('orange'),
+            alt.value('steelblue'),
+        ),
+    ).properties(
+        width=700,
+        height=700,
+        title="Available Parking"
     )
 
-    # Configure heatmap
-    heatmap = base.mark_rect().encode(
-        color=alt.Color('num_cars:Q',
-            scale=alt.Scale(scheme='viridis'),
-            legend=alt.Legend(direction='horizontal')
-        )
+    text = bars.mark_text(
+        align='center',
+        baseline='middle',
+        fontSize=25,
+        dx=-3,
+        dy=-16  # Nudges text to right so it doesn't appear on top of the bar
+    ).encode(
+        text='id:Q'
     )
 
-    # Configure text
-    text = base.mark_text(baseline='middle').encode(
-        text='num_cars:Q',
-        color=alt.condition(
-            alt.datum.num_cars > 100,
-            alt.value('black'),
-            alt.value('white')
-        )
-    )
+    return (bars+text).configure_title(
+        fontSize=25,
+        font='Calibri', #This can be editted
+        anchor='start',
+        color='gray'
+    ).configure_view(strokeWidth=0)
 
-    # Draw the chart
-    return heatmap + text
+def boarding_gates_data():
+    values=[
+        {"continent": "GATE 1", "population": 1},
+        {"continent": "GATE 2", "population": 4},
+        {"continent": "GATE 3", "population": 7}]
+
+    return values
+
+def boarding_gates():
+
+    f = open('pieChart.json', 'r')
+    d = eval(f.read().replace("true", "True"))
+
+    values = boarding_gates_data()
+
+    d['data'][0]['values'] = values
+    return d
