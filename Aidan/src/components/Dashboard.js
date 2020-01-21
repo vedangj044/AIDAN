@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
@@ -46,6 +46,13 @@ import Dialog from '@material-ui/core/Dialog';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DoneIcon from '@material-ui/icons/Done';
+import Fade from '@material-ui/core/Fade';
+import Cookies from 'universal-cookie';
+
 const makeid = (length) => {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -53,7 +60,7 @@ const makeid = (length) => {
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  return result;
+  return "Untitled_"+result;
 }
 
 var uid = makeid(6);
@@ -62,7 +69,7 @@ console.log(uid)
 var layout1 = {};
 var dashname1 = uid;
 
-var port = "http://192.168.43.119:8080";
+var port = "http://192.168.1.21:8080";
 
 // var port = "http://localhost:8080";
 
@@ -109,7 +116,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -194,9 +201,13 @@ const useStyles = makeStyles(theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  
 }));
 
 export default function Dashboard() {
+
+  const cookies = new Cookies();
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -228,11 +239,6 @@ export default function Dashboard() {
     savedatabase();
   }
 
-  for (var i=0; i<layout1.length; i++)
-  {
-    layout1[i].h = 2.8;
-    layout1[i].w = 6;
-  }
   const [todos, setTodos] = useState(datajson.todos);
   const [closedTasks, setClosedTasks] = useState(datajson.closedTasks);
   const [draggedTasks, setDraggedTasks] = useState(datajson.draggedTasks);
@@ -295,9 +301,9 @@ export default function Dashboard() {
     for (var j = arr.length-1; j > 0; j = j - 1) {
       if (arr[j].i === id) {
         if (p == 'h') {
-          return arr[j].h * 110;
+          return arr[j].h * 120;
         }
-        return arr[j].w * 80;
+        return arr[j].w * 72;
       }
     }
   }
@@ -313,8 +319,6 @@ export default function Dashboard() {
   useEffect(() => timer, []);
 
   const redraw = () => {
-    var ele = document.getElementById(k);
-    console.log(ele);
     draggedTasks.map(task =>
       {var k = task.taskID;
       fetch(arr[k])
@@ -332,8 +336,8 @@ export default function Dashboard() {
 
   const savedatabase = () => {
 
-    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
-    fetch('http://192.168.43.8:8080/upload/', {
+    var data = {user : parseInt(cookies.get('userId')), name: dashname1+'.json', content: JSON.stringify(layout1)}
+    fetch(`${port}`+`/upload/save`, {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
@@ -343,10 +347,10 @@ export default function Dashboard() {
         })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Success:', data);
+          setLogindone(true);
         })
         .catch((error) => {
-          console.error('Error:', error);
+          setLogindone(false);
         });
 
   }
@@ -447,7 +451,76 @@ export default function Dashboard() {
     setOpenD(false);
   };
   
+  
+  const [options, setOptions] = useState([]);
 
+  fetch(`${port}`+`/upload/v1/load`)
+  .then((res) => res.json())
+  .then((data) => setOptions([data.results]))
+  .catch(err => console.error(err))
+
+  console.log(options);
+
+  const ITEM_HEIGHT = 48;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+    const openM = Boolean(anchorEl);
+  
+    const handleClickMenu = event => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleCloseMenu = () => {
+      setAnchorEl(null);
+    };
+
+  const [logindone, setLogindone] = useState(false);
+
+  function LongMenu() {
+    
+  
+    return (
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClickMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={openM}
+          onClose={handleCloseMenu}
+          // PaperProps={{
+          //   style: {
+          //     maxHeight: ITEM_HEIGHT * 4.5,
+          //     width: 200,
+          //   },
+          // }}
+        >
+          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
+          {options.map(option => (
+            <MenuItem key={option} 
+            // selected={option === 'Pyxis'} 
+            onClick={handleCloseMenu}>
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    );
+  }
+
+//   var b = false;
+//   function Status()
+//   {
+//   for (var j=0; j < 10000000 ; j++ );
+//   b=true;
+//  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -465,6 +538,9 @@ export default function Dashboard() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             AIDAN Dashboard
           </Typography>
+         
+         <Typography style={{opacity:"0.5", fontSize:"12px", marginTop:"25px", display: 'block'}} className={classes.title}>
+           {(logindone)?"All Changes Saved !":" Not Authorized to make changes, Login"}</Typography>
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
@@ -483,10 +559,12 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
+        <Typography>{uid}</Typography>
+          {/* <LongMenu/> */}
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
+         
         </div>
         <Divider />
         <List><MainListItems /></List>
