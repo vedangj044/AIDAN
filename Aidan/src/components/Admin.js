@@ -86,7 +86,7 @@ class Register extends React.Component {
             <TextField id="password" margin="normal" label="Repeat password" type="password" variant="outlined" value={this.state.rePassword} onChange={this.updaterepass}/>
             <br/>
             <Button type="submit" color="primary" variant="outlined" onClick={this.submit}> Submit </Button>
-            <Fab color="primary" disabled={this.state.forward} >
+            <Fab color="primary" href="/signin" disabled={this.state.forward} >
               <a href="/signin" ><ArrowForwardIosRoundedIcon style={this.state.forward?{color:"primary"}:{color:"white"}}/></a>
             </Fab>
             <br/>
