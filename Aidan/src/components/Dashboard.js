@@ -35,6 +35,7 @@ import Input from '@material-ui/core/Input';
 // import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import GridLayout from 'react-grid-layout';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import '../../node_modules/react-grid-layout/css/styles.css';
 import '../../node_modules/react-resizable/css/styles.css';
@@ -303,9 +304,9 @@ export default function Dashboard() {
     for (var j = arr.length-1; j > 0; j = j - 1) {
       if (arr[j].i === id) {
         if (p == 'h') {
-          return arr[j].h * 120;
+          return arr[j].h * 280;
         }
-        return arr[j].w * 72;
+        return arr[j].w * 280;
       }
     }
   }
@@ -569,7 +570,7 @@ export default function Dashboard() {
               <NotificationsIcon />
             </Badge>
           </IconButton> */}
-          <Button color="inherit" href="/admin">Admin</Button>
+          <Button color="inherit" href={`${port}` + '/admin'}>Admin</Button>
           <Button color="inherit" href="/signin">Login</Button>
 
         </Toolbar>
@@ -601,7 +602,8 @@ export default function Dashboard() {
           onDrop={event => onDrop(event)}
           onDragOver={(event => onDragOver(event))}
         >
-          <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
+          <GridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
+          cols={12} rowHeight={400} width={6100}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
           // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
           >
@@ -618,7 +620,7 @@ export default function Dashboard() {
                   )
 
             }
-          </ResponsiveGridLayout>
+          </GridLayout>
         </Container>
       </main>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openD}
