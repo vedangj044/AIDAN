@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -41,6 +42,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import vegaEmbed from 'vega-embed';
 import Axios from 'axios';
 
+import Dialog from '@material-ui/core/Dialog';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
+
 const makeid = (length) => {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -57,9 +62,9 @@ console.log(uid)
 var layout1 = {};
 var dashname1 = uid;
 
-var port = "http://192.168.43.48:8080";
+var port = "http://192.168.43.119:8080";
 
-var port = "http://localhost:8080";
+// var port = "http://localhost:8080";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
@@ -206,9 +211,11 @@ export default function Dashboard() {
 
 
   const [layouts, setLayouts] = useState([
-    // {i: 'a', x: 0, y: 0, w: 6, h: 2, static: true},
-    // {i: 'b', x: 10, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-    // {i: 'c', x: 4, y: 0, w: 6, h: 2}
+    // {i: 'a', x: 10, y: 0, minH: 2.4, minW: 4},
+    // {i: 'b', x: 10, y: 0, minH: 5, minW: 8},
+    // {i: 'c', x: 10, y: 0, minH: 5, minW: 8},
+    // {i: 'd', x: 10, y: 0, minH: 2.4, minW: 4},
+    // {i: 'e', x: 10, y: 0, minH: 2.4, minW: 4},
   ]);
 
 
@@ -221,6 +228,11 @@ export default function Dashboard() {
     savedatabase();
   }
 
+  for (var i=0; i<layout1.length; i++)
+  {
+    layout1[i].h = 2.8;
+    layout1[i].w = 6;
+  }
   const [todos, setTodos] = useState(datajson.todos);
   const [closedTasks, setClosedTasks] = useState(datajson.closedTasks);
   const [draggedTasks, setDraggedTasks] = useState(datajson.draggedTasks);
@@ -231,15 +243,29 @@ export default function Dashboard() {
       ...draggedTasks,
       todo
     ]);
+    var index = todos.findIndex(i => i.taskID == todo.taskID);
+    todos.splice(index, 1);
   }
 
   const onClose = (event, todo) => {
+    var index = draggedTasks.findIndex(i => i.taskID == todo.taskID);
+    draggedTasks.splice(index, 1);
+    // clearInterval(timer);
+    // timer = setInterval(redraw, 5000);
     setClosedTasks([
       ...closedTasks,
       todo
     ]);
-    var index = draggedTasks.findIndex(i => i.taskID == todo.taskID);
-    draggedTasks.splice(index, 1);
+    
+  }
+
+  const onDragAgain = (event, todo) => {
+    setDraggedTasks([
+      ...draggedTasks,
+      todo
+    ]);
+    var index = closedTasks.findIndex(i => i.taskID == todo.taskID);
+    closedTasks.splice(index, 1);
   }
 
   const onDragOver = () => {
@@ -269,9 +295,9 @@ export default function Dashboard() {
     for (var j = arr.length-1; j > 0; j = j - 1) {
       if (arr[j].i === id) {
         if (p == 'h') {
-          return arr[j].h * 150;
+          return arr[j].h * 110;
         }
-        return arr[j].w * 150;
+        return arr[j].w * 80;
       }
     }
   }
@@ -284,27 +310,25 @@ export default function Dashboard() {
   //   vegaEmbed.parse.spec(spec, function(error, chart) { chart({el:"#"+k}).update(); });
   // }
 
-  useEffect(() => {
-    const timer = setInterval(() => {
+  useEffect(() => timer, []);
 
-  for(var j=0; j<layout1.length; j=j+1){
-    var k = layout1[j].i;
-    var task = {taskID : k}
-    console.log(k)
-    // console.log(k)
-    fetch(arr[k])
-    .then(res => res.json())
-    // .then(spec => vegaEmbed('#' + k, spec, { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
-    // .then(spec => parse(spec, k))
-    .then(vegaEmbed('#'+k, arr[k], { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
-    .catch(err => console.error(err))
-  }
-      // console.log("hello")
-    }, 1000);
+  const redraw = () => {
+    var ele = document.getElementById(k);
+    console.log(ele);
+    draggedTasks.map(task =>
+      {var k = task.taskID;
+      fetch(arr[k])
+      .then(res => res.json())
+      .then(vegaEmbed("#"+k, arr[k], { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
+      .catch(err => console.error(err))
+      }
+    )
+        // console.log("hello")
+      }
 
+  var timer = setInterval( redraw, 2000);
 
-  }, []);
-
+  
 
   const savedatabase = () => {
 
@@ -382,7 +406,9 @@ export default function Dashboard() {
       <ListSubheader inset>Recent Activities</ListSubheader>
       {closedTasks.map(todo =>
         <ListItem button
-          key={todo.taskID}>
+          key={todo.taskID}
+          draggable={true}
+              onDrag={(event) => onDragAgain(event, todo)}>
           <ListItemIcon>
             <AssignmentIcon />
           </ListItemIcon>
@@ -393,7 +419,34 @@ export default function Dashboard() {
     </div>);
   };
 
+  const [openD, setOpenD] = React.useState(false);
 
+  const handleClickOpen = (event, task) => {
+    // ReactDOM.render(
+    //   <Dialog onClose={handleClose} aria-labelledby="" open={openD}>
+    //   <Paper >
+    //               {/* {loading && <CircularProgress size={68} className={classes.fabProgress} />} */}
+    // <div id="vis" >{task.task}{task.taskID}</div>
+    //               <IconButton aria-label="close" className={classes.closeButton} style={{marginRight:"30px"}} onClick={handleClickOpen}>
+    //                 <FullscreenIcon />
+    //               </IconButton>
+    //               </Paper>
+    //   </Dialog>, document.getElementById('dialog'));
+
+    setOpenD(true);
+    var k = task.taskID;
+    fetch(arr[k])
+    .then(res => res.json())
+    .then(vegaEmbed("#vis", arr[k], { height: 500, width: 700 }))
+    .catch(err => console.error(err))
+   
+    
+
+  };
+  const handleClose = () => {
+    setOpenD(false);
+  };
+  
 
   return (
     <div className={classes.root}>
@@ -454,6 +507,9 @@ export default function Dashboard() {
               draggedTasks.map(task =>
                 <Paper key={task.taskID} style={{ display: "table" }}>
                   <div id={task.taskID} style={{ display: "table-row" }}>{task.task}{task.taskID}</div>
+                  <IconButton aria-label="" className={classes.closeButton} style={{marginRight:"30px"}} onClick={event => handleClickOpen(event, task)}>
+                    <FullscreenIcon />
+                  </IconButton>
                   <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
                     <CloseIcon />
                   </IconButton></Paper>
@@ -463,6 +519,24 @@ export default function Dashboard() {
           </ResponsiveGridLayout>
         </Container>
       </main>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openD}
+      // fullWidth="true"
+      maxWidth="true"
+      >
+      <Paper>
+        <center>
+        <div id="vis"></div>
+        </center>
+        <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                    <FullscreenExitIcon/>
+                  </IconButton>
+      </Paper>
+      </Dialog>
+      <div id="a" style={{display:"none"}}></div>
+      <div id="b" style={{display:"none"}}></div>
+      <div id="c" style={{display:"none"}}></div>
+      <div id="d" style={{display:"none"}}></div>
+      <div id="e" style={{display:"none"}}></div>
     </div>
   );
 }
