@@ -1,11 +1,5 @@
-![ERD_1](/Flowcharts/screenshot.png)
+### Find USeful illustrations and diagrams here
 
-![ERD_2](/Flowcharts/sih.png)
+https://docs.google.com/document/d/1CTAGDmD-fJhgERTpTHuQu8Rpsav7vA1eYiuekMthCUo/edit?usp=sharing
 
-![Use Diagram](/Flowcharts/screenshot3.png)
-
-![Dashboard](/Flowcharts/Dashboard.png)
-
-![Login](/Flowcharts/Login.png)
-
-![Register](/Flowcharts/Register.png)
+[!picture](/Flowcharts/dashboardnew.jpeg)

@@ -57,11 +57,11 @@ class LoginForm extends React.Component {
           <TextField id="password" margin="normal" label="password" type="password" variant="outlined" value={this.state.password} onChange={this.updatepass}/>
           <br/>
           <Button type="submit" color="primary" variant="outlined" onClick={this.submit}> Submit </Button>
-          <Fab color="primary" disabled={this.state.forward}>
-            <a href="index.html" ><ArrowForwardIosRoundedIcon /></a>
+          <Fab color="primary" href="/"disabled={this.state.forward}>
+            <a href="/" ><ArrowForwardIosRoundedIcon style={this.state.forward?{color:"primary"}:{color:"white"}}/></a>
           </Fab>
           <br/>
-          <a href="signup.html"><h4 color="primary"> Register </h4></a>
+          <a href="/admin"><h4 color="primary"> Register </h4></a>
           <br/>
         </Card>
       </div>

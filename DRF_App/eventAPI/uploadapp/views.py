@@ -7,33 +7,31 @@ from rest_framework import status
 from .serializers import FileSerializer
 from .models import File
 from django.core.files.base import ContentFile
-
+import json
+from django.contrib.auth.models import User
 
 class FileUploadView(APIView):
 
-    authentication_classes = [authentication.SessionAuthentication]
-
-    def get(self, request, *args, **kwargs):
-
-        query = request.data.dict()['name']
-
-        serializer = FileSerializer(data=request.data, context={'request': request})
-        if request.user.is_superuser:
+    def post(self, request, *args, **kwargs):
+        user_on = User.objects.filter(id=request.data['user'])[0]
+        query = request.data['name']
+        serializer = FileSerializer(data={'user': request.data['user'], 'name': request.data['name'], 'content': request.data['content']}, context={'request': request})
+        if user_on.is_superuser:
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 f = File.objects.filter(name=query)
                 if len(f)>0:
-                    f[0].content = request.data.dict()['content']
+                    f[0].content = request.data['content']
                     f[0].save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if request.user.is_staff:
+        if user_on.is_staff:
             serializer.is_valid()
             f = File.objects.filter(name=query)
             if len(f)>0:
-                f[0].content = request.data.dict()['content']
+                f[0].content = request.data['content']
                 f[0].save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
