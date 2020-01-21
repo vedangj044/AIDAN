@@ -5,8 +5,10 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import ArrowForwardIosRoundedIcon from '@material-ui/icons/ArrowForwardIosRounded';
+import Cookies from 'universal-cookie';
 
 class LoginForm extends React.Component {
+  
   constructor(props){
     super(props);
     this.state = {login: "", password: "", forward: true};
@@ -25,9 +27,10 @@ class LoginForm extends React.Component {
   }
 
   submit(event){
+    const cookies = new Cookies();
     const data = { login: this.state.login, password: this.state.password };
 
-    fetch('http://192.168.43.8:8080/accounts/login/', {
+    fetch('http://192.168.1.21:8080/accounts/login/', {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -38,13 +41,17 @@ class LoginForm extends React.Component {
     .then((data) => {
       console.log('Success:', data);
       this.setState({forward: false});
+      
+      cookies.set('userId', data.detail, { path: '/' });
     })
     .catch((error) => {
       console.error('Error:', error);
     });
   }
 
+  
   render() {
+
     return (
       <div className="LoginForm" style={{ position: "absolute",
         top: "10%",
@@ -57,11 +64,11 @@ class LoginForm extends React.Component {
           <TextField id="password" margin="normal" label="password" type="password" variant="outlined" value={this.state.password} onChange={this.updatepass}/>
           <br/>
           <Button type="submit" color="primary" variant="outlined" onClick={this.submit}> Submit </Button>
-          <Fab color="primary" disabled={this.state.forward}>
-            <a href="index.html" ><ArrowForwardIosRoundedIcon /></a>
+          <Fab color="primary" href="/"disabled={this.state.forward}>
+            <a href="/" ><ArrowForwardIosRoundedIcon style={this.state.forward?{color:"primary"}:{color:"white"}}/></a>
           </Fab>
           <br/>
-          <a href="signup.html"><h4 color="primary"> Register </h4></a>
+          <a href="/admin"><h4 color="primary"> Register </h4></a>
           <br/>
         </Card>
       </div>

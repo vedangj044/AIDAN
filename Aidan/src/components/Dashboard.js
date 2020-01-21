@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
@@ -41,6 +42,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import vegaEmbed from 'vega-embed';
 import Axios from 'axios';
 
+import Dialog from '@material-ui/core/Dialog';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DoneIcon from '@material-ui/icons/Done';
+import Fade from '@material-ui/core/Fade';
+import Cookies from 'universal-cookie';
+
 const makeid = (length) => {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -48,40 +60,42 @@ const makeid = (length) => {
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  return result;
+  return "Untitled_"+result;
 }
 
 var uid = makeid(6);
 console.log(uid)
 
 var layout1 = {};
-var dashname1 = '';
+var dashname1 = uid;
 
-var port = "http://192.168.43.8:8080";
+var port = "http://192.168.1.21:8080";
+
+// var port = "http://localhost:8080";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
   todos: [
     {
       taskID: 'a',
-      task: 'Sample Endpoint 1'
+      task: 'Boarding Gates'
     },
     {
       taskID: 'b',
-      task: 'Sample Endpoint 2'
+      task: 'Passenger Footfall'
     },
     {
       taskID: 'c',
-      task: 'Sample Endpoint 3'
+      task: 'Available Parking'
     }
   ],
   closedTasks: [{
     taskID: 'd',
-    task: 'Sample Endpoint 4'
+    task: 'Baggage Belts'
   }],
   draggedTasks: [{
     taskID: 'e',
-    task: "Sample Endpoint 5"
+    task: "Baggage Belts"
   }]
 }
 
@@ -102,7 +116,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -187,9 +201,13 @@ const useStyles = makeStyles(theme => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  
 }));
 
 export default function Dashboard() {
+
+  const cookies = new Cookies();
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -204,9 +222,11 @@ export default function Dashboard() {
 
 
   const [layouts, setLayouts] = useState([
-    // {i: 'a', x: 0, y: 0, w: 6, h: 2, static: true},
-    // {i: 'b', x: 10, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-    // {i: 'c', x: 4, y: 0, w: 6, h: 2}
+    // {i: 'a', x: 10, y: 0, minH: 2.4, minW: 4},
+    // {i: 'b', x: 10, y: 0, minH: 5, minW: 8},
+    // {i: 'c', x: 10, y: 0, minH: 5, minW: 8},
+    // {i: 'd', x: 10, y: 0, minH: 2.4, minW: 4},
+    // {i: 'e', x: 10, y: 0, minH: 2.4, minW: 4},
   ]);
 
 
@@ -229,15 +249,29 @@ export default function Dashboard() {
       ...draggedTasks,
       todo
     ]);
+    var index = todos.findIndex(i => i.taskID == todo.taskID);
+    todos.splice(index, 1);
   }
 
   const onClose = (event, todo) => {
+    var index = draggedTasks.findIndex(i => i.taskID == todo.taskID);
+    draggedTasks.splice(index, 1);
+    // clearInterval(timer);
+    // timer = setInterval(redraw, 5000);
     setClosedTasks([
       ...closedTasks,
       todo
     ]);
-    var index = draggedTasks.findIndex(i => i.taskID == todo.taskID);
-    draggedTasks.splice(index, 1);
+    
+  }
+
+  const onDragAgain = (event, todo) => {
+    setDraggedTasks([
+      ...draggedTasks,
+      todo
+    ]);
+    var index = closedTasks.findIndex(i => i.taskID == todo.taskID);
+    closedTasks.splice(index, 1);
   }
 
   const onDragOver = () => {
@@ -254,9 +288,9 @@ export default function Dashboard() {
   }
 
   const arr = {
-    "a": `${port}` + `/visual/passenger/`,
-    "b": `${port}` + `/visual/passenger/`,
-    "c": `${port}` + `/visual/passenger/`,
+    "a": `${port}` + `/visual/pieChart/`,
+    "b": `${port}` + `/visual/horizon/`,
+    "c": `${port}` + `/visual/heatmap/`,
     "d": `${port}` + `/visual/passenger/`,
     "e": `${port}` + `/visual/passenger/`
   }
@@ -264,45 +298,59 @@ export default function Dashboard() {
   var height, useHeight = useState(0)
 
   function search(arr, id, p) {
-    for (var j = 0; j < arr.length; j = j + 1) {
+    for (var j = arr.length-1; j > 0; j = j - 1) {
       if (arr[j].i === id) {
         if (p == 'h') {
-          return arr[j].h * 150;
+          return arr[j].h * 120;
         }
-        return arr[j].w * 150;
+        return arr[j].w * 72;
       }
     }
   }
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      draggedTasks.map(task =>
-        fetch(arr[task.taskID])
-          .then(res => res.json())
-          .then(spec => vegaEmbed('#' + task.taskID, spec, { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
-          .catch(err => console.error(err))
-      );
-      // console.log("hello")
-    }, 10000);
+  for(var j=0; j<layout1.length; j=j+1){
+    var k = layout1[j].i;
+  }
 
+  // function parse(spec, k) {
+  //   vegaEmbed.parse.spec(spec, function(error, chart) { chart({el:"#"+k}).update(); });
+  // }
 
-  }, []);
+  useEffect(() => timer, []);
+
+  const redraw = () => {
+    draggedTasks.map(task =>
+      {var k = task.taskID;
+      fetch(arr[k])
+      .then(res => res.json())
+      .then(vegaEmbed("#"+k, arr[k], { height: search(layout1, task.taskID, "h"), width: search(layout1, task.taskID, "w") }))
+      .catch(err => console.error(err))
+      }
+    )
+        // console.log("hello")
+      }
+
+  var timer = setInterval( redraw, 2000);
+
+  
 
   const savedatabase = () => {
-    var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
-    fetch('http://192.168.43.8:8080/upload/', {
+
+    var data = {user : parseInt(cookies.get('userId')), name: dashname1+'.json', content: JSON.stringify(layout1)}
+    fetch(`${port}`+`/upload/save`, {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
+          credentials: "same-origin"
         })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Success:', data);
+          setLogindone(true);
         })
         .catch((error) => {
-          console.error('Error:', error);
+          setLogindone(false);
         });
 
   }
@@ -362,7 +410,9 @@ export default function Dashboard() {
       <ListSubheader inset>Recent Activities</ListSubheader>
       {closedTasks.map(todo =>
         <ListItem button
-          key={todo.taskID}>
+          key={todo.taskID}
+          draggable={true}
+              onDrag={(event) => onDragAgain(event, todo)}>
           <ListItemIcon>
             <AssignmentIcon />
           </ListItemIcon>
@@ -373,8 +423,104 @@ export default function Dashboard() {
     </div>);
   };
 
+  const [openD, setOpenD] = React.useState(false);
 
+  const handleClickOpen = (event, task) => {
+    // ReactDOM.render(
+    //   <Dialog onClose={handleClose} aria-labelledby="" open={openD}>
+    //   <Paper >
+    //               {/* {loading && <CircularProgress size={68} className={classes.fabProgress} />} */}
+    // <div id="vis" >{task.task}{task.taskID}</div>
+    //               <IconButton aria-label="close" className={classes.closeButton} style={{marginRight:"30px"}} onClick={handleClickOpen}>
+    //                 <FullscreenIcon />
+    //               </IconButton>
+    //               </Paper>
+    //   </Dialog>, document.getElementById('dialog'));
 
+    setOpenD(true);
+    var k = task.taskID;
+    fetch(arr[k])
+    .then(res => res.json())
+    .then(vegaEmbed("#vis", arr[k], { height: 500, width: 700 }))
+    .catch(err => console.error(err))
+   
+    
+
+  };
+  const handleClose = () => {
+    setOpenD(false);
+  };
+  
+  
+  const [options, setOptions] = useState([]);
+
+  fetch(`${port}`+`/upload/v1/load`)
+  .then((res) => res.json())
+  .then((data) => setOptions([data.results]))
+  .catch(err => console.error(err))
+
+  console.log(options);
+
+  const ITEM_HEIGHT = 48;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+    const openM = Boolean(anchorEl);
+  
+    const handleClickMenu = event => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleCloseMenu = () => {
+      setAnchorEl(null);
+    };
+
+  const [logindone, setLogindone] = useState(false);
+
+  function LongMenu() {
+    
+  
+    return (
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClickMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={openM}
+          onClose={handleCloseMenu}
+          // PaperProps={{
+          //   style: {
+          //     maxHeight: ITEM_HEIGHT * 4.5,
+          //     width: 200,
+          //   },
+          // }}
+        >
+          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
+          {options.map(option => (
+            <MenuItem key={option} 
+            // selected={option === 'Pyxis'} 
+            onClick={handleCloseMenu}>
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    );
+  }
+
+//   var b = false;
+//   function Status()
+//   {
+//   for (var j=0; j < 10000000 ; j++ );
+//   b=true;
+//  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -392,6 +538,9 @@ export default function Dashboard() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             AIDAN Dashboard
           </Typography>
+         
+         <Typography style={{opacity:"0.5", fontSize:"12px", marginTop:"25px", display: 'block'}} className={classes.title}>
+           {(logindone)?"All Changes Saved !":" Not Authorized to make changes, Login"}</Typography>
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
@@ -399,7 +548,7 @@ export default function Dashboard() {
           </IconButton> */}
           <Button color="inherit" href="/admin">Admin</Button>
           <Button color="inherit" href="/signin">Login</Button>
-          
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -410,10 +559,12 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
+        <Typography>{uid}</Typography>
+          {/* <LongMenu/> */}
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
+         
         </div>
         <Divider />
         <List><MainListItems /></List>
@@ -428,21 +579,42 @@ export default function Dashboard() {
         >
           <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-          // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}} 
+          // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
           >
             {
               draggedTasks.map(task =>
                 <Paper key={task.taskID} style={{ display: "table" }}>
                   <div id={task.taskID} style={{ display: "table-row" }}>{task.task}{task.taskID}</div>
+                  <IconButton aria-label="" className={classes.closeButton} style={{marginRight:"30px"}} onClick={event => handleClickOpen(event, task)}>
+                    <FullscreenIcon />
+                  </IconButton>
                   <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
                     <CloseIcon />
                   </IconButton></Paper>
+                  )
 
-              )
             }
           </ResponsiveGridLayout>
         </Container>
       </main>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openD}
+      // fullWidth="true"
+      maxWidth="true"
+      >
+      <Paper>
+        <center>
+        <div id="vis"></div>
+        </center>
+        <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                    <FullscreenExitIcon/>
+                  </IconButton>
+      </Paper>
+      </Dialog>
+      <div id="a" style={{display:"none"}}></div>
+      <div id="b" style={{display:"none"}}></div>
+      <div id="c" style={{display:"none"}}></div>
+      <div id="d" style={{display:"none"}}></div>
+      <div id="e" style={{display:"none"}}></div>
     </div>
   );
 }
