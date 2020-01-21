@@ -52,6 +52,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DoneIcon from '@material-ui/icons/Done';
 import Fade from '@material-ui/core/Fade';
 import Cookies from 'universal-cookie';
+import TextField from '@material-ui/core/TextField';
+
 
 const makeid = (length) => {
   var result = '';
@@ -67,9 +69,9 @@ var uid = makeid(6);
 console.log(uid)
 
 var layout1 = {};
-var dashname1 = uid;
+// var dashname1 = uid;
 
-var port = "http://192.168.1.21:8080";
+var port = "http://192.168.43.119:8080";
 
 // var port = "http://localhost:8080";
 
@@ -336,7 +338,7 @@ export default function Dashboard() {
 
   const savedatabase = () => {
 
-    var data = {user : parseInt(cookies.get('userId')), name: dashname1+'.json', content: JSON.stringify(layout1)}
+    var data = {user : parseInt(cookies.get('userId')), name: dashname+'.json', content: JSON.stringify(layout1)}
     fetch(`${port}`+`/upload/save`, {
           method: 'POST', // or 'PUT'
           headers: {
@@ -426,16 +428,6 @@ export default function Dashboard() {
   const [openD, setOpenD] = React.useState(false);
 
   const handleClickOpen = (event, task) => {
-    // ReactDOM.render(
-    //   <Dialog onClose={handleClose} aria-labelledby="" open={openD}>
-    //   <Paper >
-    //               {/* {loading && <CircularProgress size={68} className={classes.fabProgress} />} */}
-    // <div id="vis" >{task.task}{task.taskID}</div>
-    //               <IconButton aria-label="close" className={classes.closeButton} style={{marginRight:"30px"}} onClick={handleClickOpen}>
-    //                 <FullscreenIcon />
-    //               </IconButton>
-    //               </Paper>
-    //   </Dialog>, document.getElementById('dialog'));
 
     setOpenD(true);
     var k = task.taskID;
@@ -451,30 +443,66 @@ export default function Dashboard() {
     setOpenD(false);
   };
   
+  const [logindone, setLogindone] = useState(false);
   
-  const [options, setOptions] = useState([]);
+  // var options = [];
 
-  fetch(`${port}`+`/upload/v1/load`)
-  .then((res) => res.json())
-  .then((data) => setOptions([data.results]))
-  .catch(err => console.error(err))
+  // function populateOptions(data){
+  //   console.log(data.results)
+  //   for(var i = 0; i<data.length; i++){
+  //     options.push(data[i].name);
+  //     console.log(data[i]);
+  //   }
+  // }
 
-  console.log(options);
+  // fetch(`${port}`+`/upload/v1/load`)
+  // .then((res) => res.json())
+  // .then((data) => populateOptions(data.results))
+  // .catch(err => console.error(err))
 
-  const ITEM_HEIGHT = 48;
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-    const openM = Boolean(anchorEl);
+  const [options, setOptions] = useState([
+    'None',
+    'Atria',
+    'Callisto',
+    'Dione',
+    'Ganymede',
+    'Hangouts Call',
+    'Luna',
+    'Oberon',
+    'Phobos',
+    'Pyxis',
+    'Sedna',
+    'Titania',
+    'Triton',
+    'Umbriel',
+  ]);
+  
+  // const ITEM_HEIGHT = 48;
+  
+  const [anchorEl, setAnchorEl] = React.useState(uid);
+    // const openMenu = Boolean(anchorEl);
+    const [openMenu, setOpenMenu] = React.useState(false);
   
     const handleClickMenu = event => {
-      setAnchorEl(event.currentTarget);
+      setOpenMenu(true);
+      // setAnchorEl(event.target.value);
     };
   
-    const handleCloseMenu = () => {
-      setAnchorEl(null);
+    const handleCloseMenuList = event => {
+      setOpenMenu(false);
+      setOptions([
+        ...options,
+        dashname
+      ]);
+    }
+    const handleCloseMenu = (event, option) => {
+      setAnchorEl(option);
+      setOpenMenu(false);
     };
 
-  const [logindone, setLogindone] = useState(false);
+    const handleDashname = event => {
+      setDashname(event.target.value);
+    }
 
   function LongMenu() {
     
@@ -493,8 +521,9 @@ export default function Dashboard() {
           id="long-menu"
           anchorEl={anchorEl}
           keepMounted
-          open={openM}
-          onClose={handleCloseMenu}
+          open={openMenu}
+          onClose={handleCloseMenuList}
+          transformOrigin={{ vertical: "bottom", horizontal: "right" }}
           // PaperProps={{
           //   style: {
           //     maxHeight: ITEM_HEIGHT * 4.5,
@@ -502,11 +531,11 @@ export default function Dashboard() {
           //   },
           // }}
         >
-          <Input defaultValue={uid} inputProps={{ 'aria-label': 'description' }} onChange={(e) => { setDashname(e.target.value); dashname1=dashname }} />
+          <MenuItem>
+          <Input defaultValue={anchorEl} onChange={handleDashname} inputProps={{ 'aria-label': 'description' }} />
+          </MenuItem>
           {options.map(option => (
-            <MenuItem key={option} 
-            // selected={option === 'Pyxis'} 
-            onClick={handleCloseMenu}>
+            <MenuItem key={option} onClick={event => handleCloseMenu(event, option)}>
               {option}
             </MenuItem>
           ))}
@@ -515,12 +544,6 @@ export default function Dashboard() {
     );
   }
 
-//   var b = false;
-//   function Status()
-//   {
-//   for (var j=0; j < 10000000 ; j++ );
-//   b=true;
-//  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -539,7 +562,7 @@ export default function Dashboard() {
             AIDAN Dashboard
           </Typography>
          
-         <Typography style={{opacity:"0.5", fontSize:"12px", marginTop:"25px", display: 'block'}} className={classes.title}>
+         <Typography style={{opacity:"0.5", fontSize:"12px", marginTop:"25px"}} className={classes.title}>
            {(logindone)?"All Changes Saved !":" Not Authorized to make changes, Login"}</Typography>
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -559,8 +582,9 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-        <Typography>{uid}</Typography>
-          {/* <LongMenu/> */}
+        <Typography>{anchorEl}</Typography>
+        {console.log(anchorEl)}
+          <LongMenu/>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
