@@ -62,7 +62,7 @@ console.log(uid)
 var layout1 = {};
 var dashname1 = uid;
 
-var port = "http://192.168.43.119:8080";
+var port = "http://localhost:8080";
 
 // var port = "http://localhost:8080";
 
@@ -256,7 +256,7 @@ export default function Dashboard() {
       ...closedTasks,
       todo
     ]);
-    
+
   }
 
   const onDragAgain = (event, todo) => {
@@ -328,12 +328,12 @@ export default function Dashboard() {
 
   var timer = setInterval( redraw, 2000);
 
-  
+
 
   const savedatabase = () => {
 
     var data = {user : 1, name: dashname1, content: JSON.stringify(layout1)}
-    fetch('http://192.168.43.8:8080/upload/', {
+    fetch('http://localhost:8080/upload/save', {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
@@ -439,14 +439,14 @@ export default function Dashboard() {
     .then(res => res.json())
     .then(vegaEmbed("#vis", arr[k], { height: 500, width: 700 }))
     .catch(err => console.error(err))
-   
-    
+
+
 
   };
   const handleClose = () => {
     setOpenD(false);
   };
-  
+
 
   return (
     <div className={classes.root}>

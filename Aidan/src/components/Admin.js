@@ -11,7 +11,7 @@ class Register extends React.Component {
     constructor(props){
       super(props);
       this.state = {username: "", firstName: "", lastName: "", email: "", password: "", rePassword: "", forward: true};
-  
+
       this.updateusername = this.updateusername.bind(this);
       this.updatefname = this.updatefname.bind(this);
       this.updatelname = this.updatelname.bind(this);
@@ -20,35 +20,35 @@ class Register extends React.Component {
       this.updaterepass = this.updaterepass.bind(this);
       this.submit = this.submit.bind(this);
     }
-  
+
     updateusername(e) {
       this.setState({username: e.target.value});
     }
-  
+
     updatefname(e) {
       this.setState({firstName: e.target.value});
     }
-  
+
     updatelname(e) {
       this.setState({lastName: e.target.value});
     }
-  
+
     updateemail(e) {
       this.setState({email: e.target.value});
     }
-  
+
     updatepass(e) {
       this.setState({password: e.target.value});
     }
-  
+
     updaterepass(e) {
       this.setState({rePassword: e.target.value});
     }
-  
+
     submit(event){
       const data = { username: this.state.username, first_name: this.state.firstName, last_name: this.state.lastName, email: this.state.email, password: this.state.password, password_confirm: this.state.rePassword };
-  
-      fetch('http://192.168.43.48:8080/accounts/register/',{
+
+      fetch('http://localhost:8080/accounts/register/',{
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ class Register extends React.Component {
         console.error('Error:', error);
       });
     }
-  
+
     render() {
       return (
         <div className="Register" style={{ position: "absolute",
@@ -96,7 +96,7 @@ class Register extends React.Component {
       );
     }
   }
-  
+
   function App() {
     return (
       <div className="App">
@@ -104,5 +104,5 @@ class Register extends React.Component {
       </div>
     );
   }
-  
+
   export default App;

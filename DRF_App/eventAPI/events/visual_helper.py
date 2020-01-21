@@ -5,16 +5,85 @@ Funtions to create views and visualize each endpoint.
 import altair as alt
 import pandas as pd
 import json
+from random import randint as r#...........
+
+a=['#FFFFFF', 'white', 1]#...........
+alert_me = False#...........
+toggled = False#...........
+"""
+Start of MQTT
+"""
+import sys
+import time
+import random
+
+from Adafruit_IO import MQTTClient
+
+
+ADAFRUIT_IO_KEY = '1dab7555d11545749748116e77fc4bbe'
+ADAFRUIT_IO_USERNAME = 'vedangj'
+IO_FEED = 'light'
+
+def connected(client):
+    print ('Connected to Adafruit IO! Listening for feed changes...')
+    # subscribe to feed in a dashdoard
+    client.subscribe('light')
+
+def disconnected(client):
+    print ('Disconnect from Adafruit IO!')
+    sys.exit(1)
+
+def message(client, feed_id, payload):
+    # feed_id or {0} represents the name of the feed in the message to the Adafruit IO service.
+    # Payload or {1} represents the value being sent.
+    print ('Feed {0} recieved new vaule: {1}'.format(feed_id, payload))
+
+    global toggled
+    global a
+    global alert_me
+    if (toggled==False):
+        a[0] = "#FFEEDD"
+        a[1] = "red"
+        a[2] = 0.25
+        alert_me = True
+        toggled = True
+    else:
+        a[0] = "#FFFFFF"
+        a[1] = "white"
+        a[2] = 1
+        alert_me = False
+        toggled = False
+
+client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
+
+client.on_connect    = connected
+client.on_disconnect = disconnected
+client.on_message    = message
+client.loop_background()
+client.connect()
+
+"""
+End of MQTT
+"""
 
 """
 Create types of graph.
 """
 def baggage_belts_data():
-    data = pd.DataFrame.from_records([
-          {"x": "Belt 1", "y": 1, },
-          {"x": "Belt 2", "y": 2, },
-          {"x": "Belt 3", "y": 4, }
-    ])
+
+    global alert_me#.................
+    if alert_me==False:#.................
+        data = pd.DataFrame.from_records([#.................
+              {"x": "Belt 1", "y": r(1,3), },#.................
+              {"x": "Belt 2", "y": r(1,5), },#.................
+              {"x": "Belt 3", "y": r(3,7), }#.................
+        ])#.................
+    else:#.................
+        data = pd.DataFrame.from_records([
+              {"x": "Belt 1", "y": 10, },
+              {"x": "Belt 2", "y": 10, },
+              {"x": "Belt 3", "y": 10, }
+        ])
 
     return data
 
@@ -50,19 +119,33 @@ def baggage_belts():
         font='Helvetica', #This can be editted
         anchor='start',
         color='gray'
+    ).configure_view(
+        continuousHeight=200,
+        continuousWidth=200,
+        strokeWidth=4,
+        fill=a[0],
+        stroke=a[1],
+        strokeOpacity=a[2]
     ).properties(title="Arrival baggage belts",height=300)
 
+ts = pd.Timestamp(year = 2011,  month = 11, day = 21,
+       hour = 10, second = 49)
 
+data = pd.DataFrame([
+    {'date': ts.now(), 'y': 20},
+])
 def passenger_footfall_data():
-    data = pd.DataFrame([
-        {'date': '2010-01-01T00:00:00', 'y': 20},
-        {'date': '2010-01-01T00:01:00', 'y': 27},
-        {'date': '2010-01-01T00:02:00', 'y': 20},
-        {'date': '2010-01-01T00:03:00', 'y': 40},
-        {'date': '2010-01-01T00:04:00', 'y': 60},
-        {'date': '2010-01-01T00:05:00', 'y': 70},
-    ])
 
+
+    values = pd.DataFrame([{'date': ts.now(), 'y': r(30, 70)}])
+
+    global data
+
+    a=0
+    if len(data)>10:
+        a=10
+
+    data = data.append(values, ignore_index = True)[a::]
     return data
 
 def passenger_footfall():
@@ -86,19 +169,39 @@ def passenger_footfall():
         color='gray'
     ).properties(title="Passenger Footfall",height=300, width=600)
 
+c=0
+l=set()
+def cout(d):
+    global c
+    global l
+    c+=1
+
+    if c>=100:
+        c=0
+        b=r(0,1)
+        if d in l:
+            l.remove(d)
+        if b==1:
+            l.add(d)
+        return b
+    else:
+        if d in l:
+            return 1
+        return 0
+
 def available_parking_data():
     data = pd.DataFrame.from_records([
-          {"id": 1, "occupied": 1},
-          {"id": 2, "occupied": 0},
-          {"id": 3, "occupied": 0},
-          {"id": 4, "occupied": 0},
-          {"id": 5, "occupied": 0},
-          {"id": 6, "occupied": 0},
-          {"id": 7, "occupied": 0},
-          {"id": 8, "occupied": 1},
-          {"id": 9, "occupied": 0},
-          {"id": 10, "occupied": 1},
-          {"id": 11, "occupied": 0},
+          {"id": 1, "occupied": cout(1)},
+          {"id": 2, "occupied": cout(2)},
+          {"id": 3, "occupied": cout(3)},
+          {"id": 4, "occupied": cout(4)},
+          {"id": 5, "occupied": cout(5)},
+          {"id": 6, "occupied": cout(6)},
+          {"id": 7, "occupied": cout(7)},
+          {"id": 8, "occupied": cout(8)},
+          {"id": 9, "occupied": cout(9)},
+          {"id": 10, "occupied": cout(10)},
+          {"id": 11, "occupied": cout(11)},
 
     ])
 
@@ -116,7 +219,7 @@ def available_parking():
         col="datum.id - datum.row*5"
     ).mark_point(
         filled=True,
-        size=30,
+        size=10,
     ).encode(
         x=alt.X("col:O", axis=None),
         y=alt.Y("row:O", axis=None),
@@ -151,9 +254,9 @@ def available_parking():
 
 def boarding_gates_data():
     values=[
-        {"continent": "GATE 1", "population": 1},
-        {"continent": "GATE 2", "population": 4},
-        {"continent": "GATE 3", "population": 7}]
+        {"continent": "GATE 1", "population": r(1,4)},
+        {"continent": "GATE 2", "population": r(2,5)},
+        {"continent": "GATE 3", "population": r(3,8)}]
 
     return values
 

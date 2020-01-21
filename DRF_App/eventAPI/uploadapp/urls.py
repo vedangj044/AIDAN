@@ -1,6 +1,8 @@
-from django.urls import path
+from django.conf.urls import url, include
 from .views import *
+from .api import router
 
 urlpatterns = [
-    path('', FileUploadView.as_view())
+    url('save', FileUploadView.as_view()),
+    url('v1/', include(router.urls)),
 ]

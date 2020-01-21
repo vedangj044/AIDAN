@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import authentication, permissions
 from rest_framework import status
@@ -36,3 +37,16 @@ class FileUploadView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response("{'Message': 'Login not found'}", status=status.HTTP_400_BAD_REQUEST)
+
+class LoadDashboard(viewsets.ModelViewSet):
+
+    serializer_class = FileSerializer
+
+    def get_queryset(self):
+        if self.request.user.id:
+            user = self.request.user.id
+        else:
+            user = 1
+        queryset = File.objects.filter(user=user)
+
+        return queryset
