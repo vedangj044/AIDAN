@@ -54,8 +54,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import Fade from '@material-ui/core/Fade';
 import Cookies from 'universal-cookie';
 import TextField from '@material-ui/core/TextField';
-import useAutocomplete from '@material-ui/lab/useAutocomplete';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+
 
 const makeid = (length) => {
   var result = '';
@@ -481,48 +480,72 @@ export default function Dashboard() {
   
   // const ITEM_HEIGHT = 48;
   
+  const [anchorEl, setAnchorEl] = React.useState(uid);
+    // const openMenu = Boolean(anchorEl);
+    const [openMenu, setOpenMenu] = React.useState(false);
   
+    const handleClickMenu = event => {
+      setOpenMenu(true);
+      // setAnchorEl(event.target.value);
+    };
+  
+    const handleCloseMenuList = event => {
+      setOpenMenu(false);
+      setOptions([
+        ...options,
+        dashname
+      ]);
+    }
+    const handleCloseMenu = (event, option) => {
+      setAnchorEl(option);
+      setOpenMenu(false);
+    };
 
     const handleDashname = event => {
       setDashname(event.target.value);
     }
 
+  function LongMenu() {
+    
   
-  const [b, setB] = useState(true);
-  setTimeout(() => {  setB(false) }, 2000);
-
-  function DashMenu() {
     return (
-      <div style={{ width: 300 }}>
-        {/* <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          options={options.map(option => option)}
-          renderInput={params => (
-            <TextField {...params} label="freeSolo" margin="normal" variant="outlined" fullWidth />
-          )}
-        /> */}
-        <Autocomplete
-          freeSolo
-          id="free-solo-2-demo"
-          disableClearable
-          value={dashname}
-          options={options.map(option => option)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              // label="Search input"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              
-              InputProps={{ ...params.InputProps, type: 'search' }}
-            />
-          )}
-        />
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClickMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={openMenu}
+          onClose={handleCloseMenuList}
+          transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+          // PaperProps={{
+          //   style: {
+          //     maxHeight: ITEM_HEIGHT * 4.5,
+          //     width: 200,
+          //   },
+          // }}
+        >
+          <MenuItem>
+          <Input defaultValue={anchorEl} onChange={handleDashname} inputProps={{ 'aria-label': 'description' }} />
+          </MenuItem>
+          {options.map(option => (
+            <MenuItem key={option} onClick={event => handleCloseMenu(event, option)}>
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
       </div>
     );
-          }
+  }
+  const [b, setB] = useState(true);
+  setTimeout(() => {  setB(false) }, 2000);
 
   return (
     <div className={classes.root}>
@@ -562,7 +585,9 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-       <DashMenu/>
+        <Typography>{anchorEl}</Typography>
+        {console.log(anchorEl)}
+          <LongMenu/>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
