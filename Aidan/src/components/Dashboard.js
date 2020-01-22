@@ -73,7 +73,7 @@ console.log(uid)
 var layout1 = {};
 // var dashname1 = uid;
 
-var port = "http://192.168.43.119:8080";
+var port = "http://192.168.43.8:8080";
 
 // var port = "http://localhost:8080";
 
@@ -209,6 +209,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Dashboard() {
+
+  const [options, setOptions] = useState([]);
+
+  // fetch(`${port}`+`/upload/v1/load`)
+  // .then((res) => res.json())
+  // .then((data) => setOptions(data.results))
+  // .catch(err => console.error(err));
 
   const cookies = new Cookies();
 
@@ -462,22 +469,27 @@ export default function Dashboard() {
   // .then((data) => populateOptions(data.results))
   // .catch(err => console.error(err))
 
-  const [options, setOptions] = useState([
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna',
-    'Oberon',
-    'Phobos',
-    'Pyxis',
-    'Sedna',
-    'Titania',
-    'Triton',
-    'Umbriel',
-  ]);
+  // console.log(options);
+
+  // const [options, setOptions] = useState([
+  //   'None',
+  //   'Atria',
+  //   'Callisto',
+  //   'Dione',
+  //   'Ganymede',
+  //   'Hangouts Call',
+  //   'Luna',
+  //   'Oberon',
+  //   'Phobos',
+  //   'Pyxis',
+  //   'Sedna',
+  //   'Titania',
+  //   'Triton',
+  //   'Umbriel',
+  // ]);
+
+  
+
   
   // const ITEM_HEIGHT = 48;
   
@@ -507,7 +519,7 @@ export default function Dashboard() {
           id="free-solo-2-demo"
           disableClearable
           value={dashname}
-          options={options.map(option => option)}
+          options={options.map(option => option.name)}
           renderInput={params => (
             <TextField
               {...params}
