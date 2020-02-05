@@ -54,25 +54,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import Fade from '@material-ui/core/Fade';
 import Cookies from 'universal-cookie';
 import TextField from '@material-ui/core/TextField';
-import useAutocomplete from '@material-ui/lab/useAutocomplete';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 
 const makeid = (length) => {
   var result = '';
@@ -226,13 +208,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Dashboard() {
-
-  const [options, setOptions] = useState([]);
-
-  // fetch(`${port}`+`/upload/v1/load`)
-  // .then((res) => res.json())
-  // .then((data) => setOptions(data.results))
-  // .catch(err => console.error(err));
 
   const cookies = new Cookies();
 
@@ -486,90 +461,91 @@ export default function Dashboard() {
   // .then((data) => populateOptions(data.results))
   // .catch(err => console.error(err))
 
-  // console.log(options);
-
-  // const [options, setOptions] = useState([
-  //   'None',
-  //   'Atria',
-  //   'Callisto',
-  //   'Dione',
-  //   'Ganymede',
-  //   'Hangouts Call',
-  //   'Luna',
-  //   'Oberon',
-  //   'Phobos',
-  //   'Pyxis',
-  //   'Sedna',
-  //   'Titania',
-  //   'Triton',
-  //   'Umbriel',
-  // ]);
-
-  
-
+  const [options, setOptions] = useState([
+    'None',
+    'Atria',
+    'Callisto',
+    'Dione',
+    'Ganymede',
+    'Hangouts Call',
+    'Luna',
+    'Oberon',
+    'Phobos',
+    'Pyxis',
+    'Sedna',
+    'Titania',
+    'Triton',
+    'Umbriel',
+  ]);
   
   // const ITEM_HEIGHT = 48;
   
+  const [anchorEl, setAnchorEl] = React.useState(uid);
+    // const openMenu = Boolean(anchorEl);
+    const [openMenu, setOpenMenu] = React.useState(false);
   
+    const handleClickMenu = event => {
+      setOpenMenu(true);
+      // setAnchorEl(event.target.value);
+    };
+  
+    const handleCloseMenuList = event => {
+      setOpenMenu(false);
+      setOptions([
+        ...options,
+        dashname
+      ]);
+    }
+    const handleCloseMenu = (event, option) => {
+      setAnchorEl(option);
+      setOpenMenu(false);
+    };
 
     const handleDashname = event => {
       setDashname(event.target.value);
     }
 
+  function LongMenu() {
+    
   
-  const [b, setB] = useState(true);
-  setTimeout(() => {  setB(false) }, 2000);
-
-  function DashMenu() {
     return (
-      <div style={{ width: 300 }}>
-        {/* <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          options={options.map(option => option)}
-          renderInput={params => (
-            <TextField {...params} label="freeSolo" margin="normal" variant="outlined" fullWidth />
-          )}
-        /> */}
-        <Autocomplete
-          freeSolo
-          id="free-solo-2-demo"
-          disableClearable
-          value={dashname}
-          options={options.map(option => option.name)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              // label="Search input"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              
-              InputProps={{ ...params.InputProps, type: 'search' }}
-            />
-          )}
-        />
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClickMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={openMenu}
+          onClose={handleCloseMenuList}
+          transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+          // PaperProps={{
+          //   style: {
+          //     maxHeight: ITEM_HEIGHT * 4.5,
+          //     width: 200,
+          //   },
+          // }}
+        >
+          <MenuItem>
+          <Input defaultValue={anchorEl} onChange={handleDashname} inputProps={{ 'aria-label': 'description' }} />
+          </MenuItem>
+          {options.map(option => (
+            <MenuItem key={option} onClick={event => handleCloseMenu(event, option)}>
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
       </div>
     );
-          }
-
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2020-02-05T21:11:54'));
-
-  const handleDateChange = date => {
-    setSelectedDate(date);
-  };
-  
-  const [city, setCity] = React.useState("Delhi");
-
-  const inputLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
-  }, []);
-
-  const handleChangeCity = event => {
-    setCity(event.target.value);
-  };
+  }
+  const [b, setB] = useState(true);
+  setTimeout(() => {  setB(false) }, 2000);
 
   return (
     <div className={classes.root}>
@@ -609,7 +585,9 @@ export default function Dashboard() {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-       <DashMenu/>
+        <Typography>{anchorEl}</Typography>
+        {console.log(anchorEl)}
+          <LongMenu/>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
@@ -626,7 +604,7 @@ export default function Dashboard() {
           onDrop={event => onDrop(event)}
           onDragOver={(event => onDragOver(event))}
         >
-          <GridLayout className="layout" layout={layouts} onLayoutChange={onLayoutChange}
+          <GridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
           cols={12} rowHeight={400} width={6100}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
           // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
@@ -640,76 +618,7 @@ export default function Dashboard() {
                   </IconButton>
                   <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
                     <CloseIcon />
-                  </IconButton>
-                  <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-<Typography className={classes.heading}>{city}{"  "}{selectedDate.getDate() + '/' +  (selectedDate.getMonth() + 1)  + '/' +  selectedDate.getFullYear()}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container justify="space-around">
-      <FormControl variant="outlined" className={classes.formControl} style={{marginTop:"20px"}}>
-        <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-          City
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={city}
-          onChange={handleChangeCity}
-          labelWidth={labelWidth}
-        >
-          {/* <MenuItem value="">
-            <em>None</em>
-          </MenuItem> */}
-          <MenuItem value="Delhi">Delhi</MenuItem>
-          <MenuItem value="Indore">Indore</MenuItem>
-          <MenuItem value="Mumbai">Mumbai</MenuItem>
-        </Select>
-      </FormControl>
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="dd/MM/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Select Date"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-        
-        {/* <KeyboardDatePicker
-          margin="normal"
-          id="date-picker-dialog"
-          label="Date picker dialog"
-          format="MM/dd/yyyy"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        /> */}
-        {/* <KeyboardTimePicker
-          margin="normal"
-          id="time-picker"
-          label="Time picker"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change time',
-          }}
-        /> */}
-      </Grid>
-    </MuiPickersUtilsProvider>
-        </ExpansionPanelDetails>
-      </ExpansionPanel></Paper>
+                  </IconButton></Paper>
                   )
 
             }

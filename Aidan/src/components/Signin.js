@@ -30,7 +30,7 @@ class LoginForm extends React.Component {
     const cookies = new Cookies();
     const data = { login: this.state.login, password: this.state.password };
 
-    fetch('http://192.168.1.21:8080/accounts/login/', {
+    fetch('http://192.168.43.8:8080/accounts/login/', {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
