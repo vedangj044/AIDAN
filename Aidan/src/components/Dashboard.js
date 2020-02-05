@@ -74,6 +74,12 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
+var fuck = true;
+
 const makeid = (length) => {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -84,13 +90,15 @@ const makeid = (length) => {
   return "Untitled_"+result;
 }
 
+ //var passenger_url = '/visual/horizon/?r=1';
+
 var uid = makeid(6);
 console.log(uid)
 
 var layout1 = {};
 // var dashname1 = uid;
 
-var port = "http://192.168.43.119:8080";
+var port = "http://192.168.43.8:8080";
 
 // var port = "http://localhost:8080";
 
@@ -227,6 +235,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
 
+
   const [options, setOptions] = useState([]);
 
   // fetch(`${port}`+`/upload/v1/load`)
@@ -315,25 +324,27 @@ export default function Dashboard() {
 
   }
 
-  const arr = {
-    "a": `${port}` + `/visual/pieChart/`,
-    "b": `${port}` + `/visual/horizon/`,
-    "c": `${port}` + `/visual/heatmap/`,
-    "d": `${port}` + `/visual/passenger/`,
-    "e": `${port}` + `/visual/passenger/`
-  }
+  
+  
 
   var height, useHeight = useState(0)
 
   function search(arr, id, p) {
-    for (var j = arr.length-1; j > 0; j = j - 1) {
+    for (var j = 0; j < arr.length; j = j + 1) {
       if (arr[j].i === id) {
-        if (p == 'h') {
+        if (p == "h") {
+          console.log(arr[j].h)
+          if(arr[j].h > 1){
+            return arr[j].h * 350;
+          }
           return arr[j].h * 280;
         }
-        return arr[j].w * 280;
+        if(arr[j].w > 1){
+          return arr[j].w * 380;
+        }
+        return arr[j].w * 245;
       }
-    }
+}
   }
 
   for(var j=0; j<layout1.length; j=j+1){
@@ -470,6 +481,7 @@ export default function Dashboard() {
   };
   
   const [logindone, setLogindone] = useState(false);
+  const [check, setCheck] = useState(false);
   
   // var options = [];
 
@@ -553,10 +565,16 @@ export default function Dashboard() {
     );
           }
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2020-02-05T21:11:54'));
+  const [selectedDateTo, setSelectedDateTo] = React.useState(new Date('2020-02-05T21:11:54'));
 
-  const handleDateChange = date => {
-    setSelectedDate(date);
+  const handleDateChangeTo = date => {
+    setSelectedDateTo(date);
+  };
+
+  const [selectedDateFrom, setSelectedDateFrom] = React.useState(new Date('2020-02-03T21:11:54'));
+
+  const handleDateChangeFrom = date => {
+    setSelectedDateFrom(date);
   };
   
   const [city, setCity] = React.useState("Delhi");
@@ -570,6 +588,45 @@ export default function Dashboard() {
   const handleChangeCity = event => {
     setCity(event.target.value);
   };
+
+  // const [state, setState] = React.useState({
+  //   checkedA: true,
+  //   checkedB: true,
+  // });
+  useEffect(
+    () => {
+  const [RT, handleChangeRT] = useState('/visual/horizon/?r=1')
+    });
+  const handleChangeRT = () => {
+    console.log("FUICK YOU")
+    console.log(RT)
+    var passenger_url = '';
+    if (RT)
+    {
+      passenger_url = "/visual/horizon/?r=0";
+      setUrl(passenger_url);
+    }
+    else
+    {
+      passenger_url = "/visual/horizon/?r=1";
+      setUrl("/visual/horizon/?r=0")
+    }
+    setRT(RT => !RT);
+  };
+console.log(url)
+
+
+
+  // const [footfall, setFootfall] = useState(url);
+
+  const arr = {
+    "a": `${port}` + `/visual/pieChart/`,
+    "b": `${port}` + `${url}`,
+    "c": `${port}` + `/visual/heatmap/`,
+    "d": `${port}` + `/visual/passenger/`,
+    "e": `${port}` + `/visual/passenger/`
+  }
+  
 
   return (
     <div className={classes.root}>
@@ -627,7 +684,7 @@ export default function Dashboard() {
           onDragOver={(event => onDragOver(event))}
         >
           <GridLayout className="layout" layout={layouts} onLayoutChange={onLayoutChange}
-          cols={12} rowHeight={400} width={6100}
+          cols={12} rowHeight={435} width={6100}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
           // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
           >
@@ -647,11 +704,27 @@ export default function Dashboard() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-<Typography className={classes.heading}>{city}{"  "}{selectedDate.getDate() + '/' +  (selectedDate.getMonth() + 1)  + '/' +  selectedDate.getFullYear()}</Typography>
+<Typography className={classes.heading}>{city}{"  "}
+{selectedDateTo.getDate() + '/' +  (selectedDateTo.getMonth() + 1)  + '/' +  selectedDateTo.getFullYear()}{" - "}
+{selectedDateFrom.getDate() + '/' +  (selectedDateFrom.getMonth() + 1)  + '/' +  selectedDateFrom.getFullYear()}
+</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container justify="space-around">
+      <FormControlLabel
+        control={
+          <Switch
+           
+            onChange={(e) => {
+              handleChangeRT()
+            }}
+            
+            color="primary"
+          />
+        }
+        label="Real-Time"
+      />
       <FormControl variant="outlined" className={classes.formControl} style={{marginTop:"20px"}}>
         <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
           City
@@ -671,15 +744,28 @@ export default function Dashboard() {
           <MenuItem value="Mumbai">Mumbai</MenuItem>
         </Select>
       </FormControl>
+      <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Select Date From"
+          value={selectedDateTo}
+          onChange={handleDateChangeTo}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
         <KeyboardDatePicker
           disableToolbar
           variant="inline"
           format="dd/MM/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Select Date"
-          value={selectedDate}
-          onChange={handleDateChange}
+          label="Select Date To"
+          value={selectedDateFrom}
+          onChange={handleDateChangeFrom}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}
