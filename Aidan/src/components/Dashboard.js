@@ -57,6 +57,23 @@ import TextField from '@material-ui/core/TextField';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 const makeid = (length) => {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -73,7 +90,7 @@ console.log(uid)
 var layout1 = {};
 // var dashname1 = uid;
 
-var port = "http://192.168.43.8:8080";
+var port = "http://192.168.43.119:8080";
 
 // var port = "http://localhost:8080";
 
@@ -536,6 +553,24 @@ export default function Dashboard() {
     );
           }
 
+  const [selectedDate, setSelectedDate] = React.useState(new Date('2020-02-05T21:11:54'));
+
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
+  
+  const [city, setCity] = React.useState("Delhi");
+
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const handleChangeCity = event => {
+    setCity(event.target.value);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -591,7 +626,7 @@ export default function Dashboard() {
           onDrop={event => onDrop(event)}
           onDragOver={(event => onDragOver(event))}
         >
-          <GridLayout className="layout" layouts={layouts} onLayoutChange={onLayoutChange}
+          <GridLayout className="layout" layout={layouts} onLayoutChange={onLayoutChange}
           cols={12} rowHeight={400} width={6100}
           // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
           // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
@@ -605,7 +640,76 @@ export default function Dashboard() {
                   </IconButton>
                   <IconButton aria-label="close" className={classes.closeButton} onClick={event => onClose(event, task)}>
                     <CloseIcon />
-                  </IconButton></Paper>
+                  </IconButton>
+                  <ExpansionPanel>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+<Typography className={classes.heading}>{city}{"  "}{selectedDate.getDate() + '/' +  (selectedDate.getMonth() + 1)  + '/' +  selectedDate.getFullYear()}</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container justify="space-around">
+      <FormControl variant="outlined" className={classes.formControl} style={{marginTop:"20px"}}>
+        <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+          City
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={city}
+          onChange={handleChangeCity}
+          labelWidth={labelWidth}
+        >
+          {/* <MenuItem value="">
+            <em>None</em>
+          </MenuItem> */}
+          <MenuItem value="Delhi">Delhi</MenuItem>
+          <MenuItem value="Indore">Indore</MenuItem>
+          <MenuItem value="Mumbai">Mumbai</MenuItem>
+        </Select>
+      </FormControl>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Select Date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        
+        {/* <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          label="Date picker dialog"
+          format="MM/dd/yyyy"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        /> */}
+        {/* <KeyboardTimePicker
+          margin="normal"
+          id="time-picker"
+          label="Time picker"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+        /> */}
+      </Grid>
+    </MuiPickersUtilsProvider>
+        </ExpansionPanelDetails>
+      </ExpansionPanel></Paper>
                   )
 
             }
