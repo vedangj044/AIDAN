@@ -15,8 +15,18 @@ class passenger(VisualEndpoint):
 
 class horizon(VisualEndpoint):
 
-    def get(self, request):
-        return Response(help.passenger_footfall().to_dict())
+    def get(self, request, r=0, ts=None, te=None):
+
+        try:
+            r = request.query_params['r']
+            ts = request.query_params['ts']
+            te = request.query_params['te']
+        except Exception as e:
+            pass
+        rt = True
+        if r == '1':
+            rt = False
+        return Response(help.passenger_footfall(rt, (ts, te)).to_dict())
 
 class heatmap(VisualEndpoint):
 

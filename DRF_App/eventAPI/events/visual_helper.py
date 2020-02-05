@@ -134,31 +134,46 @@ ts = pd.Timestamp(year = 2011,  month = 11, day = 21,
 data = pd.DataFrame([
     {'date': ts.now(), 'y': 20},
 ])
-def passenger_footfall_data():
+def passenger_footfall_data(realtime, interval):
 
+    if realtime:
+        values = pd.DataFrame([{'date': ts.now(), 'y': r(30, 70)}])
 
-    values = pd.DataFrame([{'date': ts.now(), 'y': r(30, 70)}])
+        global data
 
-    global data
+        a=0
+        if len(data)>10:
+            a=10
 
-    a=0
-    if len(data)>10:
-        a=10
+        data = data.append(values, ignore_index = True)[a::]
+        return data
+    else:
+        df = pd.read_csv("eventAPI/events/lo.csv")
+        df['date'] = pd.to_datetime(df['date'])
+        try:
+            return df[(df['date'] > interval[0]) & (df['date'] < interval[1])]
+        except Exception as e:
+            return df
 
-    data = data.append(values, ignore_index = True)[a::]
-    return data
+def passenger_footfall(realtime, interval):
+    data = passenger_footfall_data(realtime, interval)
 
-def passenger_footfall():
-    data = passenger_footfall_data()
+    text = (
+        alt.Chart(data.query("y == y.max()"))
+        .mark_text(dy=-15, color="red")
+        .encode(x=alt.X("date:T"), y=alt.Y("y:Q"), text=alt.Text("y:Q"))
+    )
 
-    return alt.Chart(data).mark_area(
+    chart =  alt.Chart(data).mark_area(
         color="lightblue",
         interpolate='step-after',
         line=True
     ).encode(
         alt.X('date:T', title="Time"),
         alt.Y('y', title="No. Of passengers(%)"),
-    ).configure_axis(
+    )
+
+    return (chart + text).configure_axis(
         labelFontSize=18,
         titlePadding=15,
         titleFontStyle='Courier' #This can be editted
