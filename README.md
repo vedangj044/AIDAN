@@ -1,19 +1,7 @@
-# AIDAN
 
-### Backend REST API
-![ERD_1](/Flowcharts/screenshot.png)
+### Find Useful links and Illustrations here
+https://docs.google.com/document/d/1CTAGDmD-fJhgERTpTHuQu8Rpsav7vA1eYiuekMthCUo/edit?usp=sharing
 
-![ERD_2](/Flowcharts/sih.png)
-### Use Case
-![Use Diagram](/Flowcharts/screenshot3.png)
-
-## UI
-### Dashboard
-![Dashboard](/Flowcharts/Dashboard.png)
-
-### login
-![Login](/Flowcharts/Login.png)
-
-### Register
-![Register](/Flowcharts/Register.png)
+### DASHBOARD
+![picture](/Flowcharts/dashboardnew.jpeg)
 
