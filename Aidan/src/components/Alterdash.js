@@ -19,7 +19,6 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-// import {MainListItems, SecondaryListItems} from './listItems';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -32,7 +31,6 @@ import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
-// import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import GridLayout from 'react-grid-layout';
@@ -67,14 +65,8 @@ const makeid = (length) => {
 }
 
 var uid = makeid(6);
-console.log(uid)
-
 var layout1 = {};
-// var dashname1 = uid;
-
 var port = "http://192.168.43.119:8080";
-
-// var port = "http://localhost:8080";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 var datajson = {
@@ -102,11 +94,7 @@ var datajson = {
   }]
 }
 
-// const { todos, closedTasks, draggedTask} = datajson;
-
-
 function Copyright() {
-
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
@@ -232,10 +220,6 @@ export default function Dashboard() {
     // {i: 'e', x: 10, y: 0, minH: 2.4, minW: 4},
   ]);
 
-
-
-
-
   const onLayoutChange = layout => {
     setLayouts(layout);
     layout1 = layout;
@@ -315,10 +299,6 @@ export default function Dashboard() {
     var k = layout1[j].i;
   }
 
-  // function parse(spec, k) {
-  //   vegaEmbed.parse.spec(spec, function(error, chart) { chart({el:"#"+k}).update(); });
-  // }
-
   useEffect(() => timer, []);
 
   const redraw = () => {
@@ -330,7 +310,6 @@ export default function Dashboard() {
       .catch(err => console.error(err))
       }
     )
-        // console.log("hello")
       }
 
   var timer = setInterval( redraw, 2000);
@@ -362,18 +341,6 @@ export default function Dashboard() {
   function MainListItems() {
     return (
       <div draggable={false}>
-        {/* <ListItem button draggable={true}>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Orders" />
-      </ListItem> */}
         {
           todos.map(todo =>
             <ListItem button
@@ -387,24 +354,6 @@ export default function Dashboard() {
             </ListItem>
           )
         }
-        {/* <ListItem button>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Customers" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Reports" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <LayersIcon />
-        </ListItemIcon>
-        <ListItemText primary="Integrations" />
-      </ListItem> */}
       </div>);
   };
 
@@ -445,21 +394,6 @@ export default function Dashboard() {
   };
   
   const [logindone, setLogindone] = useState(false);
-  
-  // var options = [];
-
-  // function populateOptions(data){
-  //   console.log(data.results)
-  //   for(var i = 0; i<data.length; i++){
-  //     options.push(data[i].name);
-  //     console.log(data[i]);
-  //   }
-  // }
-
-  // fetch(`${port}`+`/upload/v1/load`)
-  // .then((res) => res.json())
-  // .then((data) => populateOptions(data.results))
-  // .catch(err => console.error(err))
 
   const [options, setOptions] = useState([
     'None',
@@ -477,16 +411,12 @@ export default function Dashboard() {
     'Triton',
     'Umbriel',
   ]);
-  
-  // const ITEM_HEIGHT = 48;
-  
+ 
   const [anchorEl, setAnchorEl] = React.useState(uid);
-    // const openMenu = Boolean(anchorEl);
     const [openMenu, setOpenMenu] = React.useState(false);
   
     const handleClickMenu = event => {
       setOpenMenu(true);
-      // setAnchorEl(event.target.value);
     };
   
     const handleCloseMenuList = event => {
@@ -525,12 +455,6 @@ export default function Dashboard() {
           open={openMenu}
           onClose={handleCloseMenuList}
           transformOrigin={{ vertical: "bottom", horizontal: "right" }}
-          // PaperProps={{
-          //   style: {
-          //     maxHeight: ITEM_HEIGHT * 4.5,
-          //     width: 200,
-          //   },
-          // }}
         >
           <MenuItem>
           <Input defaultValue={anchorEl} onChange={handleDashname} inputProps={{ 'aria-label': 'description' }} />
@@ -567,11 +491,6 @@ export default function Dashboard() {
          
          <Typography style={{opacity:"0.5", fontSize:"12px", marginTop:"25px", display: (b) ? "block" : "none"}} className={classes.title}>
            {(logindone)?"All Changes Saved !":" Not Authorized to make changes, Login"}</Typography>
-          {/* <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton> */}
           <Button color="inherit" href={`${port}` + '/admin'}>Admin</Button>
           <Button color="inherit" href="/signin">Login</Button>
 
