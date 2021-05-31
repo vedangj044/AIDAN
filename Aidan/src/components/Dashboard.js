@@ -479,7 +479,7 @@ export default function Dashboard() {
               ? "All Changes Saved !"
               : " Not Authorized to make changes, Login"}
           </Typography>
-          <Button color="inherit" href={`${port}` + "/admin"}>
+          <Button color="inherit" href="/admin">
             Admin
           </Button>
           <Button color="inherit" href="/signin">
