@@ -22,7 +22,7 @@
     "react-draggable": "^4.2.0",
     "react-grid-layout": "^0.17.1",
     "react-router": "^5.1.2",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.1",
     "universal-cookie": "^4.0.3",
     "vega": "^5.9.1",
     "vega-embed": "^6.2.1",
